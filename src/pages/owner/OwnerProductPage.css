@@ -1,0 +1,988 @@
+
+/* ==========================================
+   사장님 상품 관리
+========================================== */
+
+.owner-product {
+    --product-primary: #bb4d32;
+    --product-primary-hover: #a6422c;
+    --product-text: #262626;
+    --product-muted: #828282;
+    --product-border: #e8e8e8;
+    --product-soft: #fff0ea;
+  
+    display: flex;
+    flex-direction: column;
+  
+    width: 100%;
+    min-height: 100dvh;
+  
+    background: #ffffff;
+    color: var(--product-text);
+  
+    font-family: inherit;
+    box-sizing: border-box;
+  }
+  
+  .owner-product *,
+  .owner-product *::before,
+  .owner-product *::after {
+    box-sizing: border-box;
+  }
+  
+  .owner-product button,
+  .owner-product input,
+  .owner-product select,
+  .owner-product textarea {
+    font-family: inherit;
+  }
+  
+  /* ==========================================
+     상단 헤더
+  ========================================== */
+  
+  .owner-product__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  
+    width: 100%;
+    height: 64px;
+    flex-shrink: 0;
+  
+    padding: 0 22px;
+  
+    border-bottom: 1px solid #f5f5f5;
+    background: #ffffff;
+  }
+  
+  .owner-product__header h1 {
+    margin: 0;
+  
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1.5;
+    letter-spacing: -0.3px;
+  }
+  
+  .owner-product__back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    width: 34px;
+    height: 34px;
+    padding: 0;
+  
+    border: none;
+    background: transparent;
+  
+    color: var(--product-text);
+    cursor: pointer;
+  }
+  
+  .owner-product__header-spacer {
+    width: 34px;
+    height: 34px;
+  }
+  
+  /* ==========================================
+     전체 레이아웃
+  ========================================== */
+  
+  .owner-product__layout {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+  
+    width: 100%;
+    min-width: 0;
+  }
+  
+  .owner-product__content {
+    flex: 1;
+    min-width: 0;
+  
+    padding: 25px 24px 30px;
+  }
+  
+  .owner-product__store-heading {
+    margin: 0 0 18px;
+  
+    font-size: 19px;
+    font-weight: 800;
+    line-height: 1.5;
+    letter-spacing: -0.5px;
+  
+    word-break: keep-all;
+  }
+  
+  /* ==========================================
+     상품 목록
+  ========================================== */
+  
+  .owner-product__list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  
+  .owner-product__card {
+    padding: 0 0 19px;
+    border-bottom: 1px solid var(--product-border);
+  }
+  
+  .owner-product__card:last-child {
+    border-bottom: none;
+  }
+  
+  /* ==========================================
+     상품 이미지 + 기본정보
+  ========================================== */
+  
+  .owner-product__product-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  
+    width: 100%;
+    margin-bottom: 13px;
+  }
+  
+  .owner-product__image {
+    display: block;
+  
+    width: 82px;
+    height: 82px;
+    flex-shrink: 0;
+  
+    border-radius: 8px;
+    object-fit: cover;
+  
+    background: #f7f0ed;
+  }
+  
+  .owner-product__placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    color: #ae674f;
+  }
+  
+  .owner-product__image--large {
+    width: 100%;
+    height: auto;
+  
+    aspect-ratio: 1.45 / 1;
+  
+    border-radius: 9px;
+    object-fit: cover;
+    overflow: hidden;
+  }
+  
+  .owner-product__product-info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  
+    min-width: 0;
+  }
+  
+  .owner-product__store-name {
+    color: var(--product-muted);
+  
+    font-size: 11px;
+    line-height: 1.5;
+  }
+  
+  .owner-product__product-name {
+    color: var(--product-text);
+  
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.5;
+  
+    overflow-wrap: anywhere;
+  }
+  
+  .owner-product__product-price {
+    color: var(--product-text);
+  
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1.5;
+  }
+  
+  .owner-product__prep-time {
+    color: var(--product-muted);
+  
+    font-size: 11px;
+    line-height: 1.5;
+  }
+  
+  /* ==========================================
+     상품 설명 - 간결한 카드
+  ========================================== */
+  
+  .owner-product__description-box {
+    width: 100%;
+  
+    margin: 0 0 12px;
+    padding: 11px 13px;
+  
+    border: 1px solid #eeeeee;
+    border-radius: 8px;
+  
+    background: #fafafa;
+  }
+  
+  .owner-product__description-label {
+    margin: 0 0 5px;
+  
+    color: #555555;
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1.5;
+  }
+  
+  /* 기본적으로 3줄까지만 표시 */
+  
+  .owner-product__description-text {
+    display: -webkit-box;
+  
+    margin: 0;
+  
+    color: #666666;
+  
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.7;
+  
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+  
+    overflow: hidden;
+  }
+  
+  /* 펼치기 상태 */
+  
+  .owner-product__description-text.is-expanded {
+    display: block;
+  
+    -webkit-line-clamp: unset;
+    line-clamp: unset;
+  
+    overflow: visible;
+  }
+  
+  /* 더 보기 / 접기 버튼 */
+  
+  .owner-product__more-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 3px;
+  
+    margin: 7px 0 0;
+    padding: 3px 0;
+  
+    border: none;
+    background: transparent;
+  
+    color: var(--product-primary);
+  
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.5;
+  
+    cursor: pointer;
+  }
+  
+  .owner-product__more-button:hover {
+    text-decoration: underline;
+  }
+  
+  /* ==========================================
+     판매 상태 행
+  ========================================== */
+  
+  .owner-product__status-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  
+    width: 100%;
+  
+    margin: 0 0 11px;
+    padding: 10px 12px;
+  
+    border: 1px solid #eeeeee;
+    border-radius: 8px;
+  
+    background: #ffffff;
+  }
+  
+  .owner-product__status-title {
+    color: #646464;
+  
+    font-size: 12px;
+    font-weight: 700;
+  }
+  
+  /* ==========================================
+     판매 상태 배지
+  ========================================== */
+  
+  .owner-product__status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  
+    flex-shrink: 0;
+  
+    min-width: 70px;
+    padding: 6px 10px;
+  
+    border-radius: 7px;
+  
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1.4;
+  
+    white-space: nowrap;
+  }
+  
+  .owner-product__status-dot {
+    width: 6px;
+    height: 6px;
+  
+    flex-shrink: 0;
+  
+    border-radius: 50%;
+    background: currentColor;
+  }
+  
+  /* 판매 중 */
+  
+  .owner-product__status-badge.is-selling {
+    background: #e8f5ed;
+    color: #278154;
+  }
+  
+  /* 품절 */
+  
+  .owner-product__status-badge.is-soldout {
+    background: #fff2df;
+    color: #b66d17;
+  }
+  
+  /* 판매 중지 */
+  
+  .owner-product__status-badge.is-paused {
+    background: #f0f1f3;
+    color: #6a717c;
+  }
+  
+  /* 알 수 없는 상태 */
+  
+  .owner-product__status-badge.is-unknown {
+    background: #f0f1f3;
+    color: #777777;
+  }
+  
+  /* ==========================================
+     상품 카드 버튼 - 높이 및 간격 축소
+  ========================================== */
+  
+  .owner-product__card-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  
+  .owner-product__primary,
+  .owner-product__secondary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  
+    width: 100%;
+  
+    padding: 9px 13px;
+  
+    border: none;
+    border-radius: 8px;
+  
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.5;
+  
+    cursor: pointer;
+  }
+  
+  .owner-product__primary {
+    min-height: 50px;
+  
+    background: var(--product-primary);
+    color: #ffffff;
+  
+    font-size: 13px;
+  }
+  
+  .owner-product__primary:hover:not(:disabled) {
+    background: var(--product-primary-hover);
+  }
+  
+  /* 상품 수정 / 판매 상태 변경 */
+  
+  .owner-product__secondary {
+    min-height: 40px;
+  
+    background: var(--product-soft);
+    color: var(--product-primary);
+  }
+  
+  .owner-product__secondary:hover:not(:disabled) {
+    background: #ffe4d9;
+  }
+  
+  .owner-product__primary:disabled,
+  .owner-product__secondary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  /* ==========================================
+     상품 등록 / 수정 폼
+  ========================================== */
+  
+  .owner-product__photo-section {
+    margin-bottom: 22px;
+  }
+  
+  .owner-product__image-input {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  
+    margin-top: 13px;
+  
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.5;
+  }
+  
+  .owner-product__field {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  
+    width: 100%;
+    min-width: 0;
+  
+    margin-bottom: 17px;
+  }
+  
+  .owner-product__field > span {
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.5;
+  }
+  
+  .owner-product__field input,
+  .owner-product__field select,
+  .owner-product__field textarea,
+  .owner-product__image-input input {
+    display: block;
+  
+    width: 100%;
+    min-width: 0;
+    min-height: 46px;
+  
+    padding: 11px 13px;
+  
+    border: 1px solid var(--product-border);
+    border-radius: 8px;
+  
+    background: #ffffff;
+    color: var(--product-text);
+  
+    outline: none;
+  
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  
+  .owner-product__field textarea {
+    min-height: 100px;
+  
+    resize: vertical;
+    white-space: pre-wrap;
+  }
+  
+  .owner-product__field input:focus,
+  .owner-product__field select:focus,
+  .owner-product__field textarea:focus,
+  .owner-product__image-input input:focus {
+    border-color: var(--product-primary);
+  }
+  
+  .owner-product__field input[aria-invalid="true"] {
+    border-color: #d94d40;
+    background: #fffafa;
+  }
+  
+  .owner-product__field-error {
+    color: #d94d40;
+  
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.7;
+  }
+  
+  .owner-product__character-count {
+    align-self: flex-end;
+  
+    color: #9a9a9a;
+  
+    font-size: 11px;
+    line-height: 1.5;
+  }
+  
+  .owner-product__help {
+    margin: 8px 0 0;
+  
+    color: var(--product-muted);
+  
+    font-size: 11px;
+    line-height: 1.7;
+  }
+  
+  /* ==========================================
+     구매 목적 태그
+  ========================================== */
+  
+  .owner-product__tags {
+    margin: 23px 0;
+  }
+  
+  .owner-product__tags h3 {
+    margin: 0 0 8px;
+  
+    font-size: 14px;
+    font-weight: 800;
+  }
+  
+  .owner-product__tags > p {
+    margin: 0 0 14px;
+  
+    color: var(--product-muted);
+  
+    font-size: 12px;
+    line-height: 1.7;
+  }
+  
+  .owner-product__tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .owner-product__tag {
+    padding: 9px 12px;
+  
+    border: 1px solid var(--product-border);
+    border-radius: 8px;
+  
+    background: #ffffff;
+    color: #555555;
+  
+    font-size: 12px;
+    font-weight: 600;
+  
+    cursor: pointer;
+  }
+  
+  .owner-product__tag.is-selected {
+    border-color: var(--product-primary);
+  
+    background: var(--product-soft);
+    color: var(--product-primary);
+  }
+  
+  .owner-product__tags .owner-product__field-error {
+    display: block;
+    margin-top: 10px;
+  }
+  
+  /* ==========================================
+     판매 상태 변경 화면
+  ========================================== */
+  
+  .owner-product__status-options {
+    margin-top: 26px;
+  }
+  
+  .owner-product__status-options h2 {
+    margin: 0 0 17px;
+  
+    font-size: 19px;
+    font-weight: 800;
+    line-height: 1.5;
+  
+    word-break: keep-all;
+  }
+  
+  .owner-product__status-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  
+    width: 100%;
+    min-height: 66px;
+  
+    margin-bottom: 10px;
+    padding: 12px 14px;
+  
+    border: 1px solid var(--product-border);
+    border-radius: 9px;
+  
+    background: #ffffff;
+    color: #666666;
+  
+    text-align: left;
+    cursor: pointer;
+  
+    transition:
+      border-color 0.15s ease,
+      background-color 0.15s ease;
+  }
+  
+  .owner-product__status-option-main {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+  
+    min-width: 0;
+  }
+  
+  .owner-product__status-option-dot {
+    width: 10px;
+    height: 10px;
+  
+    flex-shrink: 0;
+  
+    border-radius: 50%;
+    background: currentColor;
+  }
+  
+  .owner-product__status-option-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  
+    min-width: 0;
+  }
+  
+  .owner-product__status-option-text strong {
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1.5;
+  }
+  
+  .owner-product__status-option-text small {
+    color: #818181;
+  
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+  
+  .owner-product__status-radio {
+    display: block;
+  
+    width: 18px;
+    height: 18px;
+  
+    flex-shrink: 0;
+  
+    border: 1.5px solid #cccccc;
+    border-radius: 50%;
+  
+    background: #ffffff;
+  }
+  
+  .owner-product__status-option.is-selected
+  .owner-product__status-radio {
+    border: 5px solid currentColor;
+  }
+  
+  /* 판매 중 */
+  
+  .owner-product__status-option.is-selling {
+    color: #278154;
+  }
+  
+  .owner-product__status-option.is-selling.is-selected {
+    border-color: #75b794;
+    background: #f1faf4;
+  }
+  
+  /* 품절 */
+  
+  .owner-product__status-option.is-soldout {
+    color: #b66d17;
+  }
+  
+  .owner-product__status-option.is-soldout.is-selected {
+    border-color: #e7b978;
+    background: #fff8ed;
+  }
+  
+  /* 판매 중지 */
+  
+  .owner-product__status-option.is-paused {
+    color: #6a717c;
+  }
+  
+  .owner-product__status-option.is-paused.is-selected {
+    border-color: #a6acb5;
+    background: #f6f7f8;
+  }
+  
+  /* ==========================================
+     안내 및 오류
+  ========================================== */
+  
+  .owner-product__notice,
+  .owner-product__error {
+    margin: 17px 0 0;
+    padding: 13px;
+  
+    border-radius: 8px;
+  
+    background: var(--product-soft);
+    color: #aa503c;
+  
+    font-size: 12px;
+    line-height: 1.8;
+  
+    word-break: keep-all;
+  }
+  
+  .owner-product__error {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+  
+    color: #c74b36;
+  }
+  
+  .owner-product__error svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  
+  /* ==========================================
+     하단 저장 버튼
+  ========================================== */
+  
+  .owner-product__footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
+  
+    width: 100%;
+    margin-top: auto;
+  
+    padding: 14px 24px
+      max(20px, env(safe-area-inset-bottom));
+  
+    border-top: 1px solid #f3f3f3;
+    background: #ffffff;
+  }
+  
+  /* ==========================================
+     하단 네비게이션
+  ========================================== */
+  
+  .owner-product__bottom-nav {
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
+  
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  
+    width: 100%;
+  
+    padding: 12px 5px
+      max(13px, env(safe-area-inset-bottom));
+  
+    border-top: 1px solid #ededed;
+    background: #ffffff;
+  }
+  
+  .owner-product__bottom-nav button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  
+    min-height: 42px;
+  
+    border: none;
+    background: transparent;
+  
+    color: #888888;
+  
+    font-size: 10px;
+    font-weight: 600;
+  
+    cursor: pointer;
+  }
+  
+  .owner-product__bottom-nav button.is-active {
+    color: var(--product-primary);
+  }
+  
+  .owner-product__bottom-nav button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+  
+  /* ==========================================
+     로딩 / 빈 목록 / 오류
+  ========================================== */
+  
+  .owner-product__feedback,
+  .owner-product__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 13px;
+  
+    min-height: 52dvh;
+    padding: 25px;
+  
+    color: var(--product-primary);
+    text-align: center;
+  }
+  
+  .owner-product__feedback--inline {
+    min-height: 45dvh;
+  }
+  
+  .owner-product__feedback--success {
+    flex: 1;
+  }
+  
+  .owner-product__feedback h2,
+  .owner-product__empty h3 {
+    margin: 0;
+  
+    color: var(--product-text);
+  
+    font-size: 19px;
+    font-weight: 800;
+    line-height: 1.5;
+  }
+  
+  .owner-product__feedback p,
+  .owner-product__empty p {
+    margin: 0;
+  
+    color: var(--product-muted);
+  
+    font-size: 12px;
+    line-height: 1.8;
+  }
+  
+  .owner-product__feedback > .owner-product__primary {
+    margin-top: 12px;
+  }
+  
+  .owner-product__empty {
+    min-height: 230px;
+  
+    border: 1px dashed var(--product-border);
+    border-radius: 10px;
+  }
+  
+  .owner-product__skeleton {
+    width: 100%;
+    max-width: 420px;
+    height: 100px;
+  
+    border-radius: 9px;
+    background: #f0f1f2;
+  }
+  
+  /* ==========================================
+     접근성
+  ========================================== */
+  
+  .owner-product button:focus-visible,
+  .owner-product input:focus-visible,
+  .owner-product textarea:focus-visible,
+  .owner-product select:focus-visible {
+    outline: 2px solid var(--product-primary);
+    outline-offset: 3px;
+  }
+  
+  /* ==========================================
+     작은 모바일 화면
+  ========================================== */
+  
+  @media (max-width: 360px) {
+    .owner-product__header {
+      padding: 0 18px;
+    }
+  
+    .owner-product__content {
+      padding: 22px 18px 28px;
+    }
+  
+    .owner-product__footer {
+      padding-left: 18px;
+      padding-right: 18px;
+    }
+  
+    .owner-product__image {
+      width: 76px;
+      height: 76px;
+    }
+  
+    .owner-product__image--large {
+      width: 100%;
+      height: auto;
+    }
+  
+    .owner-product__description-box {
+      padding: 10px 12px;
+    }
+  
+    .owner-product__status-option {
+      padding: 12px;
+    }
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+    .owner-product__status-option {
+      transition: none;
+    }
+  }
+  

@@ -1,0 +1,637 @@
+
+/* ==========================================
+   사장님 점포 관리
+========================================== */
+
+.owner-store {
+    --owner-primary: #bb4d32;
+    --owner-primary-hover: #a6422c;
+    --owner-text: #262626;
+    --owner-muted: #858585;
+    --owner-border: #e8e8e8;
+    --owner-soft: #fff0ea;
+  
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 100dvh;
+  
+    background: #ffffff;
+    color: var(--owner-text);
+  
+    font-family: inherit;
+    box-sizing: border-box;
+  }
+  
+  .owner-store *,
+  .owner-store *::before,
+  .owner-store *::after {
+    box-sizing: border-box;
+  }
+  
+  .owner-store button,
+  .owner-store input,
+  .owner-store select {
+    font-family: inherit;
+  }
+  
+  /* ==========================================
+     헤더
+  ========================================== */
+  
+  .owner-store__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  
+    height: 64px;
+    width: 100%;
+    flex-shrink: 0;
+  
+    padding: 0 22px;
+  
+    border-bottom: 1px solid #f5f5f5;
+    background: #ffffff;
+  }
+  
+  .owner-store__header h1 {
+    margin: 0;
+  
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1.5;
+    letter-spacing: -0.4px;
+  }
+  
+  .owner-store__back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    width: 34px;
+    height: 34px;
+  
+    padding: 0;
+    border: none;
+    background: transparent;
+  
+    color: var(--owner-text);
+    cursor: pointer;
+  }
+  
+  .owner-store__header-spacer {
+    width: 34px;
+    height: 34px;
+  }
+  
+  /* ==========================================
+     화면 레이아웃
+  ========================================== */
+  
+  .owner-store__layout {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+  
+    width: 100%;
+  }
+  
+  .owner-store__content {
+    flex: 1;
+    padding: 28px 24px 36px;
+  }
+  
+  .owner-store__intro {
+    margin-bottom: 23px;
+  }
+  
+  .owner-store__intro h2 {
+    margin: 0;
+  
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1.5;
+    letter-spacing: -0.7px;
+  
+    word-break: keep-all;
+  }
+  
+  .owner-store__intro p {
+    margin: 13px 0 0;
+  
+    color: var(--owner-muted);
+    font-size: 12px;
+    line-height: 1.8;
+  
+    word-break: keep-all;
+  }
+  
+  .owner-store__intro > .owner-store__primary {
+    margin-top: 18px;
+  }
+  
+  /* ==========================================
+     점포 기본정보
+  ========================================== */
+  
+  .owner-store__facts {
+    margin: 0 0 22px;
+  }
+  
+  .owner-store__facts > div {
+    display: grid;
+    grid-template-columns: 82px minmax(0, 1fr);
+    gap: 12px;
+  
+    padding: 11px 0;
+  }
+  
+  .owner-store__facts dt {
+    color: var(--owner-muted);
+    font-size: 12px;
+    line-height: 1.6;
+  }
+  
+  .owner-store__facts dd {
+    margin: 0;
+  
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.6;
+  
+    overflow-wrap: anywhere;
+  }
+  
+  /* ==========================================
+     폼
+  ========================================== */
+  
+  .owner-store__field {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  
+    width: 100%;
+    min-width: 0;
+  
+    margin-bottom: 17px;
+  }
+  
+  .owner-store__field > span {
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.5;
+  }
+  
+  .owner-store__field input,
+  .owner-store__field select {
+    display: block;
+  
+    width: 100%;
+    min-width: 0;
+    min-height: 47px;
+  
+    padding: 12px 13px;
+  
+    border: 1px solid var(--owner-border);
+    border-radius: 8px;
+  
+    background: #ffffff;
+    color: var(--owner-text);
+  
+    outline: none;
+  
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  
+  .owner-store__field input:focus,
+  .owner-store__field select:focus {
+    border-color: var(--owner-primary);
+  }
+  
+  .owner-store__field input::placeholder {
+    color: #aaaaaa;
+  }
+  
+  .owner-store__field input[type="time"] {
+    min-width: 0;
+  }
+  
+  /* ==========================================
+     영업시간
+  ========================================== */
+  
+  .owner-store__day {
+    margin-bottom: 19px;
+    padding: 17px;
+  
+    border: 1px solid var(--owner-border);
+    border-radius: 10px;
+  
+    background: #ffffff;
+  }
+  
+  .owner-store__day-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  
+  .owner-store__day-header h3 {
+    margin: 0;
+  
+    font-size: 14px;
+    font-weight: 800;
+  }
+  
+  .owner-store__closed {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  
+    color: var(--owner-muted);
+    font-size: 12px;
+    font-weight: 600;
+  
+    cursor: pointer;
+  }
+  
+  .owner-store__closed input {
+    width: 16px;
+    height: 16px;
+  
+    accent-color: var(--owner-primary);
+  }
+  
+  .owner-store__time-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px 12px;
+  }
+  
+  .owner-store__time-grid .owner-store__field {
+    margin-bottom: 13px;
+  }
+  
+  .owner-store__time-grid .owner-store__field > span {
+    font-size: 11px;
+  }
+  
+  .owner-store__time-grid .owner-store__field input {
+    padding: 10px 8px;
+    font-size: 12px;
+  }
+  
+  .owner-store__note {
+    margin: 15px 0 21px;
+    padding: 13px 14px;
+  
+    border-radius: 8px;
+  
+    background: #fff6f2;
+    color: #a55340;
+  
+    font-size: 11px;
+    line-height: 1.8;
+  
+    word-break: keep-all;
+  }
+  
+  /* ==========================================
+     오류
+  ========================================== */
+  
+  .owner-store__error {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+  
+    margin: 18px 0 0;
+    padding: 13px;
+  
+    border-radius: 8px;
+  
+    background: #fff0ea;
+    color: #c84c39;
+  
+    font-size: 12px;
+    line-height: 1.7;
+  }
+  
+  .owner-store__error svg {
+    display: block;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  
+  /* ==========================================
+     버튼
+  ========================================== */
+  
+  .owner-store__primary,
+  .owner-store__secondary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  
+    width: 100%;
+    min-height: 51px;
+  
+    padding: 12px 15px;
+  
+    border: none;
+    border-radius: 9px;
+  
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1.5;
+  
+    cursor: pointer;
+  }
+  
+  .owner-store__primary {
+    background: var(--owner-primary);
+    color: #ffffff;
+  }
+  
+  .owner-store__primary:hover:not(:disabled) {
+    background: var(--owner-primary-hover);
+  }
+  
+  .owner-store__secondary {
+    min-height: 46px;
+  
+    margin-top: 11px;
+  
+    background: var(--owner-soft);
+    color: var(--owner-primary);
+  }
+  
+  .owner-store__secondary:hover:not(:disabled) {
+    background: #ffe4d9;
+  }
+  
+  .owner-store__primary:disabled,
+  .owner-store__secondary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  .owner-store__text-button {
+    display: flex;
+    justify-content: center;
+  
+    width: 100%;
+    margin-top: 20px;
+    padding: 9px;
+  
+    border: none;
+    background: transparent;
+  
+    color: var(--owner-primary);
+    font-size: 12px;
+    font-weight: 700;
+  
+    cursor: pointer;
+  }
+  
+  /* ==========================================
+     하단 버튼
+  ========================================== */
+  
+  .owner-store__footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
+  
+    width: 100%;
+    margin-top: auto;
+  
+    padding: 14px 24px
+      max(20px, env(safe-area-inset-bottom));
+  
+    border-top: 1px solid #f3f3f3;
+    background: #ffffff;
+  }
+  
+  /* ==========================================
+     사장님 하단 메뉴
+  ========================================== */
+  
+  .owner-store__bottom-nav {
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
+  
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  
+    width: 100%;
+    margin-top: auto;
+  
+    padding: 12px 5px
+      max(13px, env(safe-area-inset-bottom));
+  
+    border-top: 1px solid #ededed;
+    background: #ffffff;
+  }
+  
+  .owner-store__bottom-nav button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  
+    min-height: 43px;
+  
+    border: none;
+    background: transparent;
+  
+    color: #888888;
+  
+    font-size: 10px;
+    font-weight: 600;
+  
+    cursor: pointer;
+  }
+  
+  .owner-store__bottom-nav button.is-active {
+    color: var(--owner-primary);
+  }
+  
+  .owner-store__bottom-nav button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+  
+  /* ==========================================
+     로딩 / 데이터 조회 오류
+  ========================================== */
+  
+  .owner-store__loading,
+  .owner-store__feedback {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+  
+    min-height: 60dvh;
+    padding: 24px;
+  
+    color: var(--owner-muted);
+    text-align: center;
+  
+    font-size: 12px;
+    line-height: 1.7;
+  }
+  
+  .owner-store__feedback > svg {
+    color: var(--owner-primary);
+  }
+  
+  .owner-store__feedback h2 {
+    margin: 0;
+    color: var(--owner-text);
+    font-size: 19px;
+    font-weight: 800;
+  }
+  
+  .owner-store__feedback p,
+  .owner-store__loading p {
+    margin: 0;
+    line-height: 1.8;
+  }
+  
+  .owner-store__feedback .owner-store__primary {
+    margin-top: 12px;
+  }
+  
+  .owner-store__skeleton {
+    width: 100%;
+    max-width: 420px;
+    height: 95px;
+  
+    border-radius: 9px;
+  
+    background: linear-gradient(
+      90deg,
+      #f4f5f6,
+      #e4e7e9,
+      #f4f5f6
+    );
+  
+    background-size: 200% 100%;
+  
+    animation: owner-shimmer 1.5s linear infinite;
+  }
+  
+  @keyframes owner-shimmer {
+    to {
+      background-position: -200% 0;
+    }
+  }
+  
+  .owner-store__spinner {
+    animation: owner-spin 1s linear infinite;
+  }
+  
+  @keyframes owner-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* ==========================================
+     접근성 / 작은 화면
+  ========================================== */
+  
+  .owner-store button:focus-visible,
+  .owner-store input:focus-visible,
+  .owner-store select:focus-visible {
+    outline: 2px solid var(--owner-primary);
+    outline-offset: 3px;
+  }
+  
+  @media (max-width: 360px) {
+    .owner-store__header {
+      padding: 0 18px;
+    }
+  
+    .owner-store__content {
+      padding: 24px 18px 32px;
+    }
+  
+    .owner-store__footer {
+      padding-left: 18px;
+      padding-right: 18px;
+    }
+  
+    .owner-store__intro h2 {
+      font-size: 20px;
+    }
+  
+    .owner-store__day {
+      padding: 13px;
+    }
+  
+    .owner-store__time-grid {
+      gap: 1px 8px;
+    }
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+    .owner-store__skeleton,
+    .owner-store__spinner {
+      animation: none;
+    }
+  }
+  
+
+    /* ==========================================
+    점포 입력값 검증
+    ========================================== */
+
+    /* 잘못 입력한 필드 */
+    .owner-store__field input[aria-invalid="true"],
+    .owner-store__field select[aria-invalid="true"] {
+    border-color: #dc4d42;
+    background-color: #fffafa;
+    }
+
+    /* 오류가 있는 필드를 선택한 경우 */
+    .owner-store__field input[aria-invalid="true"]:focus,
+    .owner-store__field select[aria-invalid="true"]:focus {
+    border-color: #dc4d42;
+    outline: 2px solid rgba(220, 77, 66, 0.12);
+    outline-offset: 1px;
+    }
+
+    /* 필드별 오류 메시지 */
+    .owner-store__field-error {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+
+    margin-top: -2px;
+
+    color: #dc4d42;
+
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.6;
+
+    word-break: keep-all;
+    }
+
+    .owner-store__field-error svg {
+    display: block;
+    flex-shrink: 0;
+    margin-top: 2px;
+    }

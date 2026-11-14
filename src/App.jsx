@@ -1,8 +1,6 @@
 
 import { Routes, Route, useNavigate } from "react-router";
 
-import { Store, LogOut } from "lucide-react";
-
 // ==========================================
 // 공통 인증 페이지
 // ==========================================
@@ -16,13 +14,9 @@ import LoginPage from "./pages/auth/LoginPage";
 // ==========================================
 
 import CustomerHomePage from "./pages/customer/CustomerHomePage";
-
 import PurposePage from "./pages/customer/PurposePage";
-
 import PreferencesPage from "./pages/customer/PreferencesPage";
-
 import RecommendationPage from "./pages/customer/RecommendationPage";
-
 import RecommendationDetailPage from "./pages/customer/RecommendationDetailPage";
 
 // ==========================================
@@ -30,69 +24,24 @@ import RecommendationDetailPage from "./pages/customer/RecommendationDetailPage"
 // ==========================================
 
 import ReservationFormPage from "./pages/customer/ReservationFormPage";
-
 import ReservationListPage from "./pages/customer/ReservationListPage";
-
 import ReservationDetailPage from "./pages/customer/ReservationDetailPage";
 
 // ==========================================
-// 인증 및 API
+// 사장님 페이지
+// ==========================================
+
+import OwnerStorePage from "./pages/owner/OwnerStorePage";
+import OwnerProductPage from "./pages/owner/OwnerProductPage";
+import OwnerOrderPage from "./pages/owner/OwnerOrderPage";
+
+// ==========================================
+// 인증
 // ==========================================
 
 import AuthRequired from "./components/AuthRequired";
 
-import { logout } from "./api/authApi";
-
 import "./App.css";
-
-// ==========================================
-// 사장님 메인 임시 화면
-// ==========================================
-
-function TemporaryOwnerHome() {
-  const navigate = useNavigate();
-
-  const handleLogout = async () => {
-    try {
-      await logout();
-
-      navigate("/select-role", {
-        replace: true,
-      });
-    } catch (error) {
-      alert(
-        error.message ?? "로그아웃에 실패했습니다."
-      );
-    }
-  };
-
-  return (
-    <main className="temporary-page">
-      <div className="temporary-page__content">
-        <div className="temporary-page__icon">
-          <Store size={44} strokeWidth={1.7} />
-        </div>
-
-        <h1 className="temporary-page__title">
-          사장님 메인 화면
-        </h1>
-
-        <p className="temporary-page__description">
-          사장님 화면은 개발 중입니다.
-        </p>
-
-        <button
-          type="button"
-          className="temporary-page__logout"
-          onClick={handleLogout}
-        >
-          <LogOut size={18} />
-          로그아웃
-        </button>
-      </div>
-    </main>
-  );
-}
 
 // ==========================================
 // 존재하지 않는 페이지
@@ -133,7 +82,7 @@ function App() {
     <div className="app-container">
       <Routes>
         {/* ==================================
-            공통 인증
+            공통 인증 페이지
         ================================== */}
 
         {/* 시작 화면 */}
@@ -178,7 +127,7 @@ function App() {
           }
         />
 
-        {/* AI 맞춤 질문 및 구매 조건 */}
+        {/* 맞춤 질문 및 구매 조건 */}
         <Route
           path="/customer/preferences"
           element={
@@ -189,7 +138,7 @@ function App() {
         />
 
         {/* ==================================
-            AI 추천
+            AI 추천 페이지
         ================================== */}
 
         {/* AI 추천 목록 */}
@@ -202,7 +151,7 @@ function App() {
           }
         />
 
-        {/* 추천 조합 상세 */}
+        {/* AI 추천 조합 상세 */}
         <Route
           path="/customer/recommendations/detail/:candidateId"
           element={
@@ -213,7 +162,7 @@ function App() {
         />
 
         {/* ==================================
-            통합 예약
+            통합 예약 페이지
         ================================== */}
 
         {/* 통합 예약 신청 */}
@@ -236,7 +185,7 @@ function App() {
           }
         />
 
-        {/* 통합 예약 상세 및 승인 상태 */}
+        {/* 통합 예약 상세 및 승인 상태 확인 */}
         <Route
           path="/customer/reservations/:reservationId"
           element={
@@ -250,18 +199,38 @@ function App() {
             사장님 페이지
         ================================== */}
 
-        {/* 사장님 메인 */}
+        {/* 점포 등록 및 관리 */}
         <Route
           path="/owner"
           element={
             <AuthRequired role="OWNER">
-              <TemporaryOwnerHome />
+              <OwnerStorePage />
+            </AuthRequired>
+          }
+        />
+
+        {/* 상품 목록, 등록, 수정 및 판매 상태 관리 */}
+        <Route
+          path="/owner/products"
+          element={
+            <AuthRequired role="OWNER">
+              <OwnerProductPage />
+            </AuthRequired>
+          }
+        />
+
+        {/* 주문 목록, 승인 및 거절 관리 */}
+        <Route
+          path="/owner/orders"
+          element={
+            <AuthRequired role="OWNER">
+              <OwnerOrderPage />
             </AuthRequired>
           }
         />
 
         {/* ==================================
-            잘못된 URL
+            존재하지 않는 페이지
         ================================== */}
 
         <Route

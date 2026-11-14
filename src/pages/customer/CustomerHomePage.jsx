@@ -3,22 +3,16 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
 import {
-  ArrowRight,
-  CalendarCheck2,
-  CalendarHeart,
+  CalendarDays,
   ChevronRight,
-  CheckCircle2,
   Gift,
-  Heart,
   Home,
   LoaderCircle,
   PartyPopper,
   RefreshCw,
   Search,
-  ShoppingBag,
   Sparkles,
-  Store,
-  Tent,
+  UserRound,
 } from "lucide-react";
 
 import { getPurposeCategories } from "../../api/purposeApi";
@@ -28,17 +22,19 @@ import logoText from "../../assets/logo-text.svg";
 
 import "./CustomerHomePage.css";
 
+// ==========================================
+// 구매 목적별 아이콘
+// ==========================================
+
 const categoryIcons = {
   "1": Gift,
   "2": PartyPopper,
-  "3": Tent,
+  "3": Sparkles,
 };
 
-const categoryDescriptions = {
-  "1": "특별한 날, 마음을 전하는 선물",
-  "2": "함께하는 시간을 위한 준비",
-  "3": "평범한 하루를 더 특별하게",
-};
+// ==========================================
+// 고객 홈 페이지
+// ==========================================
 
 function CustomerHomePage() {
   const navigate = useNavigate();
@@ -48,9 +44,11 @@ function CustomerHomePage() {
   const [error, setError] = useState("");
   const [retryCount, setRetryCount] = useState(0);
 
-  // ========================================
+  const [notice, setNotice] = useState("");
+
+  // ==========================================
   // 구매 목적 조회: PUR-01
-  // ========================================
+  // ==========================================
 
   useEffect(() => {
     let active = true;
@@ -60,7 +58,7 @@ function CustomerHomePage() {
       setError("");
 
       try {
-        // getPurposeCategories()는 배열을 반환
+        // purposeApi.js는 배열을 반환
         const result = await getPurposeCategories();
 
         if (!active) return;
@@ -76,7 +74,6 @@ function CustomerHomePage() {
         if (!active) return;
 
         setCategories([]);
-
         setError(
           err.message ||
             "구매 목적을 불러오지 못했습니다."
@@ -95,6 +92,14 @@ function CustomerHomePage() {
     };
   }, [retryCount]);
 
+  // ==========================================
+  // 페이지 이동
+  // ==========================================
+
+  const goToHome = () => {
+    navigate("/customer");
+  };
+
   const goToPurpose = () => {
     navigate("/customer/purpose");
   };
@@ -103,17 +108,26 @@ function CustomerHomePage() {
     navigate("/customer/reservations");
   };
 
+  // 현재 확인되지 않은 경로에는 임의로 이동하지 않음
+  const showPreparingNotice = (name) => {
+    setNotice(`${name} 기능은 준비 중이에요.`);
+  };
+
+  // ==========================================
+  // 화면
+  // ==========================================
+
   return (
     <main className="customer-home">
-      {/* ========================================
-          상단 헤더
-      ======================================== */}
+      {/* ======================================
+          상단 로고
+      ====================================== */}
 
       <header className="customer-home__header">
         <button
           type="button"
           className="customer-home__brand"
-          onClick={() => navigate("/customer")}
+          onClick={goToHome}
           aria-label="같이팔장 홈"
         >
           <img
@@ -128,99 +142,45 @@ function CustomerHomePage() {
             className="customer-home__logo-text"
           />
         </button>
-
-        <button
-          type="button"
-          className="customer-home__header-action"
-          onClick={goToReservations}
-          aria-label="예약 내역 확인"
-        >
-          <CalendarCheck2 size={22} />
-        </button>
       </header>
 
-      {/* ========================================
-          본문
-      ======================================== */}
+      {/* ======================================
+          메인 콘텐츠
+      ====================================== */}
 
       <div className="customer-home__body">
-        {/* 메인 AI 추천 배너 */}
+        {/* 메인 타이틀 */}
 
-        <section className="customer-home__hero">
-          <div className="customer-home__hero-content">
-            <span className="customer-home__eyebrow">
-              <Sparkles size={14} />
-              AI 맞춤 상품 추천
-            </span>
+        <section className="customer-home__intro">
+          <h1>
+            오늘은 어떤 준비를 하시나요?
+          </h1>
 
-            <h1>
-              필요한 상품을
-              <br />
-              <strong>한 번에 찾아보세요!</strong>
-            </h1>
+          <p>
+            우리 동네 두 가게의 상품을
+            함께 골라 드려요.
+          </p>
 
-            <p>
-              원하는 목적과 예산을 알려주면
-              <br />
-              서로 다른 두 가게의 상품을
-              <br />
-              하나의 조합으로 추천해 드려요.
-            </p>
-
-            <button
-              type="button"
-              className="customer-home__hero-button"
-              onClick={goToPurpose}
-            >
-              AI 추천 시작하기
-              <ArrowRight size={18} />
-            </button>
-          </div>
-
-          <div
-            className="customer-home__hero-art"
-            aria-hidden="true"
+          <button
+            type="button"
+            className="customer-home__primary-button"
+            onClick={goToPurpose}
           >
-            <div className="customer-home__art-circle">
-              <ShoppingBag
-                size={55}
-                strokeWidth={1.5}
-              />
-            </div>
-
-            <span className="customer-home__art-heart">
-              <Heart
-                size={20}
-                fill="currentColor"
-              />
-            </span>
-
-            <span className="customer-home__art-sparkle">
-              <Sparkles size={24} />
-            </span>
-          </div>
+            <Sparkles size={18} />
+            <span>AI 추천 시작하기</span>
+          </button>
         </section>
 
-        {/* ========================================
-            구매 목적 선택
-        ======================================== */}
+        {/* ======================================
+            자주 찾는 카테고리
+        ====================================== */}
 
         <section className="customer-home__section">
           <div className="customer-home__section-heading">
-            <div>
-              <span className="customer-home__section-label">
-                PURPOSE
-              </span>
-
-              <h2>어떤 상품을 찾고 있나요?</h2>
-
-              <p>
-                구매 목적을 선택하고 추천을 받아보세요.
-              </p>
-            </div>
+            <h2>요즘 많이 준비해요</h2>
           </div>
 
-          {/* 로딩 */}
+          {/* 조회 중 */}
 
           {loading && (
             <div
@@ -228,8 +188,8 @@ function CustomerHomePage() {
               role="status"
             >
               <LoaderCircle
+                size={20}
                 className="customer-home__spinner"
-                size={23}
               />
 
               <span>
@@ -250,197 +210,220 @@ function CustomerHomePage() {
               <button
                 type="button"
                 onClick={() =>
-                  setRetryCount((prev) => prev + 1)
+                  setRetryCount((count) => count + 1)
                 }
               >
                 <RefreshCw size={16} />
-                다시 불러오기
+                다시 시도
               </button>
             </div>
           )}
 
-          {/* 구매 목적 카드 */}
+          {/* 카테고리 버튼 */}
 
           {!loading && !error && (
             <div className="customer-home__category-list">
-              {categories.map((category) => {
-                const categoryId = String(category.id);
+              {categories.slice(0, 3).map((category) => {
+                const categoryId = String(
+                  category.id
+                );
 
                 const Icon =
                   categoryIcons[categoryId] ?? Gift;
 
-                const description =
-                  categoryDescriptions[categoryId] ??
-                  "맞춤 상품을 추천받아 보세요.";
-
                 return (
                   <button
                     type="button"
-                    className="customer-home__category-card"
+                    className="customer-home__category-button"
                     key={categoryId}
                     onClick={goToPurpose}
                   >
-                    <span className="customer-home__category-icon">
-                      <Icon
-                        size={25}
-                        strokeWidth={1.8}
-                      />
-                    </span>
+                    <Icon
+                      size={19}
+                      strokeWidth={1.8}
+                    />
 
-                    <span className="customer-home__category-content">
-                      <strong>
-                        {category.name}
-                      </strong>
-
-                      <small>
-                        {description}
-                      </small>
+                    <span>
+                      {category.name}
                     </span>
 
                     <ChevronRight
+                      size={17}
                       className="customer-home__category-arrow"
-                      size={20}
                     />
                   </button>
                 );
               })}
 
               {categories.length === 0 && (
-                <div className="customer-home__empty">
+                <p className="customer-home__empty">
                   등록된 구매 목적이 없습니다.
-                </div>
+                </p>
               )}
             </div>
           )}
         </section>
 
-        {/* ========================================
-            서비스 이용 안내
-        ======================================== */}
+        {/* ======================================
+            추천 안내
+        ====================================== */}
 
-        <section className="customer-home__how">
+        <section className="customer-home__section customer-home__suggestion">
           <div className="customer-home__section-heading">
-            <div>
-              <span className="customer-home__section-label">
-                HOW IT WORKS
-              </span>
-
-              <h2>
-                같이팔장은 이렇게 이용해요
-              </h2>
-            </div>
+            <h2>이런 조합을 준비할 수 있어요</h2>
           </div>
 
-          <div className="customer-home__steps">
-            <div className="customer-home__step">
-              <span className="customer-home__step-icon">
-                <Search size={22} />
+          <div className="customer-home__suggestion-card">
+            <div
+              className="customer-home__suggestion-visual"
+              aria-hidden="true"
+            >
+              <div className="customer-home__visual-icon">
+                <Gift size={29} strokeWidth={1.6} />
+              </div>
+
+              <span className="customer-home__visual-plus">
+                +
               </span>
 
-              <div>
-                <strong>
-                  01. 구매 조건 입력
-                </strong>
-
-                <p>
-                  목적, 예산, 원하는 상품을 알려주세요.
-                </p>
+              <div className="customer-home__visual-icon customer-home__visual-icon--second">
+                <PartyPopper
+                  size={29}
+                  strokeWidth={1.6}
+                />
               </div>
             </div>
 
-            <div className="customer-home__step">
-              <span className="customer-home__step-icon">
-                <Store size={22} />
-              </span>
+            <div className="customer-home__suggestion-content">
+              <strong>
+                우리 동네 상품을 함께 추천받아요
+              </strong>
 
-              <div>
-                <strong>
-                  02. 두 가게의 상품 추천
-                </strong>
+              <p>
+                꽃, 디저트 등 원하는 조건에 맞춰
+                두 가게의 상품을 조합해 드려요.
+              </p>
 
-                <p>
-                  AI가 어울리는 상품 조합을 추천해요.
-                </p>
-              </div>
-            </div>
-
-            <div className="customer-home__step">
-              <span className="customer-home__step-icon">
-                <CheckCircle2 size={22} />
-              </span>
-
-              <div>
-                <strong>
-                  03. 한 번에 예약 신청
-                </strong>
-
-                <p>
-                  두 가게에 예약을 신청하고 승인을 기다려요.
-                </p>
-              </div>
+              <button
+                type="button"
+                onClick={goToPurpose}
+              >
+                추천받으러 가기
+                <ChevronRight size={16} />
+              </button>
             </div>
           </div>
         </section>
 
-        {/* 예약 내역 바로가기 */}
+        {/* ======================================
+            예약 내역 바로가기
+        ====================================== */}
 
-        <button
-          type="button"
-          className="customer-home__reservation-banner"
-          onClick={goToReservations}
-        >
-          <span className="customer-home__reservation-icon">
-            <CalendarHeart size={25} />
-          </span>
+        <section className="customer-home__section customer-home__reservation-section">
+          <button
+            type="button"
+            className="customer-home__reservation-link"
+            onClick={goToReservations}
+          >
+            <span className="customer-home__reservation-icon">
+              <CalendarDays size={21} />
+            </span>
 
-          <span className="customer-home__reservation-copy">
-            <strong>
-              신청한 예약이 있나요?
-            </strong>
+            <span className="customer-home__reservation-text">
+              <strong>
+                신청한 예약이 있나요?
+              </strong>
 
-            <small>
-              예약 진행 상태 확인하기
-            </small>
-          </span>
+              <small>
+                내 예약 진행 상태 확인하기
+              </small>
+            </span>
 
-          <ArrowRight size={19} />
-        </button>
+            <ChevronRight size={19} />
+          </button>
+        </section>
       </div>
 
-      {/* ========================================
+      {/* ======================================
+          미구현 기능 안내
+      ====================================== */}
+
+      {notice && (
+        <div
+          className="customer-home__notice"
+          role="status"
+        >
+          <span>{notice}</span>
+
+          <button
+            type="button"
+            onClick={() => setNotice("")}
+            aria-label="안내 닫기"
+          >
+            닫기
+          </button>
+        </div>
+      )}
+
+      {/* ======================================
           하단 내비게이션
-      ======================================== */}
+      ====================================== */}
 
       <nav
         className="customer-home__bottom-nav"
         aria-label="고객 메뉴"
       >
+        {/* 홈 */}
+
         <button
           type="button"
           className="customer-home__nav-item customer-home__nav-item--active"
-          onClick={() => navigate("/customer")}
+          onClick={goToHome}
           aria-current="page"
         >
           <Home size={21} />
+
           <span>홈</span>
         </button>
+
+        {/* 상품 검색 */}
 
         <button
           type="button"
           className="customer-home__nav-item"
-          onClick={goToPurpose}
+          onClick={() =>
+            showPreparingNotice("상품 검색")
+          }
         >
-          <Sparkles size={21} />
-          <span>AI 추천</span>
+          <Search size={21} />
+
+          <span>상품 검색</span>
         </button>
+
+        {/* 예약 확인 */}
 
         <button
           type="button"
           className="customer-home__nav-item"
           onClick={goToReservations}
         >
-          <CalendarCheck2 size={21} />
-          <span>예약 내역</span>
+          <CalendarDays size={21} />
+
+          <span>예약 확인</span>
+        </button>
+
+        {/* 마이 */}
+
+        <button
+          type="button"
+          className="customer-home__nav-item"
+          onClick={() =>
+            showPreparingNotice("마이페이지")
+          }
+        >
+          <UserRound size={21} />
+
+          <span>마이</span>
         </button>
       </nav>
     </main>

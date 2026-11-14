@@ -1,20 +1,26 @@
 
-/* ========================================
-   고객 홈
-======================================== */
+/* ==========================================
+   고객 홈 페이지
+========================================== */
 
 .customer-home {
-    --home-primary: #ff795b;
-    --home-primary-dark: #ed6347;
-    --home-text: #282423;
-    --home-muted: #837a77;
-    --home-border: #f0e9e6;
+    --home-primary: #bb4d32;
+    --home-primary-dark: #a7422c;
+    --home-text: #262626;
+    --home-muted: #828282;
+    --home-border: #ebebeb;
+    --home-soft: #fff0ea;
   
     width: 100%;
     min-height: 100dvh;
-    padding-bottom: 94px;
+  
+    padding-bottom: calc(
+      90px + env(safe-area-inset-bottom)
+    );
+  
     background: #ffffff;
     color: var(--home-text);
+  
     box-sizing: border-box;
   }
   
@@ -24,322 +30,243 @@
     box-sizing: border-box;
   }
   
-  /* 상단 헤더 */
+  .customer-home button {
+    font-family: inherit;
+  }
+  
+  /* ==========================================
+     상단 헤더
+  ========================================== */
   
   .customer-home__header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
   
-    height: 72px;
-    padding: 0 22px;
+    width: 100%;
+    height: 69px;
+  
+    padding: 0 24px;
   
     background: #ffffff;
-    border-bottom: 1px solid #f6f2f0;
   }
   
   .customer-home__brand {
-    display: flex;
+    display: inline-flex;
     align-items: center;
+    justify-content: flex-start;
     gap: 7px;
   
     padding: 0;
     border: none;
+  
     background: transparent;
     cursor: pointer;
   }
   
   .customer-home__logo-symbol {
-    width: 29px;
-    height: 35px;
+    display: block;
+  
+    width: 27px;
+    height: 33px;
+  
     object-fit: contain;
   }
   
   .customer-home__logo-text {
-    width: 89px;
+    display: block;
+  
+    width: 85px;
     height: auto;
+  
     object-fit: contain;
   }
   
-  .customer-home__header-action {
+  /* ==========================================
+     본문
+  ========================================== */
+  
+  .customer-home__body {
+    padding: 19px 24px 35px;
+  }
+  
+  /* ==========================================
+     메인 소개
+  ========================================== */
+  
+  .customer-home__intro {
+    margin-bottom: 32px;
+  }
+  
+  .customer-home__intro h1 {
+    margin: 0;
+  
+    color: var(--home-text);
+  
+    font-size: 24px;
+    font-weight: 800;
+    line-height: 1.4;
+    letter-spacing: -0.9px;
+    word-break: keep-all;
+  }
+  
+  .customer-home__intro p {
+    margin: 12px 0 0;
+  
+    color: var(--home-muted);
+  
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.7;
+  
+    word-break: keep-all;
+  }
+  
+  /* 메인 AI 추천 버튼 */
+  
+  .customer-home__primary-button {
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 9px;
   
-    width: 38px;
-    height: 38px;
+    width: 100%;
+    min-height: 53px;
   
-    padding: 0;
-    border: 1px solid var(--home-border);
-    border-radius: 13px;
-  
-    background: #ffffff;
-    color: var(--home-text);
-    cursor: pointer;
-  }
-  
-  /* 본문 */
-  
-  .customer-home__body {
-    padding: 22px 20px 30px;
-  }
-  
-  /* 메인 배너 */
-  
-  .customer-home__hero {
-    position: relative;
-    overflow: hidden;
-  
-    min-height: 290px;
-    padding: 29px 23px;
-  
-    border-radius: 22px;
-    background: linear-gradient(
-      135deg,
-      #fff2ed 0%,
-      #ffe3da 100%
-    );
-  }
-  
-  .customer-home__hero-content {
-    position: relative;
-    z-index: 1;
-  }
-  
-  .customer-home__eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-  
-    padding: 7px 10px;
-  
-    border-radius: 20px;
-    background: #ffffffbb;
-  
-    color: #df684e;
-    font-size: 11px;
-    font-weight: 800;
-  }
-  
-  .customer-home__hero h1 {
-    margin: 16px 0 11px;
-  
-    font-size: 25px;
-    font-weight: 700;
-    letter-spacing: -1px;
-    line-height: 1.35;
-  }
-  
-  .customer-home__hero h1 strong {
-    color: #ee684a;
-    font-weight: 900;
-  }
-  
-  .customer-home__hero p {
-    position: relative;
-    z-index: 1;
-  
-    margin: 0;
-  
-    color: #72635e;
-    font-size: 12px;
-    line-height: 1.7;
-  }
-  
-  .customer-home__hero-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  
-    min-height: 43px;
-    margin-top: 21px;
-    padding: 0 17px;
+    margin-top: 22px;
+    padding: 12px 16px;
   
     border: none;
-    border-radius: 11px;
+    border-radius: 9px;
   
     background: var(--home-primary);
     color: #ffffff;
   
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 800;
+    line-height: 1.5;
   
     cursor: pointer;
+    transition: background 0.15s ease;
   }
   
-  .customer-home__hero-button:hover {
+  .customer-home__primary-button:hover {
     background: var(--home-primary-dark);
   }
   
-  /* 배너 장식 */
+  .customer-home__primary-button svg {
+    display: block;
   
-  .customer-home__hero-art {
-    position: absolute;
-    right: -8px;
-    bottom: 24px;
+    width: 18px;
+    height: 18px;
   
-    width: 140px;
-    height: 150px;
-  
-    pointer-events: none;
+    flex-shrink: 0;
   }
   
-  .customer-home__art-circle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  
-    width: 120px;
-    height: 120px;
-  
-    border: 8px solid #ffffff66;
-    border-radius: 50%;
-  
-    background: #ffc5b4;
-    color: #e56a50;
-  
-    transform: rotate(-13deg);
-  }
-  
-  .customer-home__art-heart {
-    position: absolute;
-    top: 5px;
-    right: 15px;
-    color: #fa947c;
-  }
-  
-  .customer-home__art-sparkle {
-    position: absolute;
-    bottom: 0;
-    left: -18px;
-    color: #f29567;
-  }
-  
-  /* 섹션 공통 */
+  /* ==========================================
+     섹션 공통
+  ========================================== */
   
   .customer-home__section {
-    margin-top: 35px;
+    margin-top: 31px;
   }
   
   .customer-home__section-heading {
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    align-items: flex-start;
   
-    margin-bottom: 18px;
-  }
-  
-  .customer-home__section-label {
-    display: block;
-    margin-bottom: 7px;
-  
-    color: var(--home-primary);
-    font-size: 10px;
-    font-weight: 900;
-    letter-spacing: 1px;
+    margin-bottom: 17px;
   }
   
   .customer-home__section-heading h2 {
     margin: 0;
   
-    font-size: 19px;
-    font-weight: 850;
-    letter-spacing: -0.6px;
+    color: var(--home-text);
+  
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.5;
+    letter-spacing: -0.35px;
   }
   
-  .customer-home__section-heading p {
-    margin: 8px 0 0;
-  
-    color: var(--home-muted);
-    font-size: 12px;
-    line-height: 1.6;
-  }
-  
-  /* 구매 목적 카드 */
+  /* ==========================================
+     구매 목적 버튼
+  ========================================== */
   
   .customer-home__category-list {
     display: flex;
     flex-direction: column;
-    gap: 11px;
+    gap: 12px;
   }
   
-  .customer-home__category-card {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-  
-    width: 100%;
-    min-height: 89px;
-    padding: 16px;
-  
-    border: 1px solid var(--home-border);
-    border-radius: 16px;
-  
-    background: #ffffff;
-    text-align: left;
-  
-    cursor: pointer;
-  }
-  
-  .customer-home__category-card:hover {
-    border-color: #ffb5a2;
-    background: #fffbf9;
-  }
-  
-  .customer-home__category-icon {
+  .customer-home__category-button {
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 10px;
+  
+    position: relative;
+  
+    width: 100%;
+    min-height: 53px;
+  
+    padding: 12px 38px;
+  
+    border: 1px solid var(--home-border);
+    border-radius: 10px;
+  
+    background: #ffffff;
+    color: var(--home-text);
+  
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.5;
+  
+    text-align: center;
+  
+    cursor: pointer;
+    transition:
+      background 0.15s ease,
+      border-color 0.15s ease;
+  }
+  
+  .customer-home__category-button > svg:first-child {
+    display: block;
+  
+    width: 19px;
+    height: 19px;
+  
     flex-shrink: 0;
-  
-    width: 49px;
-    height: 49px;
-  
-    border-radius: 14px;
-  
-    background: #fff0eb;
     color: var(--home-primary);
   }
   
-  .customer-home__category-card:nth-child(2)
-    .customer-home__category-icon {
-    background: #fff3e2;
-    color: #e39a44;
-  }
-  
-  .customer-home__category-card:nth-child(3)
-    .customer-home__category-icon {
-    background: #eef7ef;
-    color: #5d9877;
-  }
-  
-  .customer-home__category-content {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    gap: 6px;
-  
+  .customer-home__category-button > span {
     min-width: 0;
-  }
-  
-  .customer-home__category-content strong {
-    font-size: 15px;
-    font-weight: 800;
-  }
-  
-  .customer-home__category-content small {
-    color: var(--home-muted);
-    font-size: 11px;
-    line-height: 1.5;
+    overflow-wrap: anywhere;
   }
   
   .customer-home__category-arrow {
-    flex-shrink: 0;
-    color: #b9afaa;
+    position: absolute;
+    right: 15px;
+    top: 50%;
+  
+    color: #b1b1b1;
+  
+    transform: translateY(-50%);
   }
   
-  /* 로딩 및 오류 */
+  .customer-home__category-button:hover {
+    border-color: #dd9d8b;
+    background: #fff8f5;
+  }
+  
+  .customer-home__category-button:active {
+    background: var(--home-soft);
+  }
+  
+  /* ==========================================
+     로딩 및 오류
+  ========================================== */
   
   .customer-home__loading,
   .customer-home__error,
@@ -348,22 +275,28 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 13px;
+    gap: 12px;
   
-    min-height: 155px;
-    padding: 22px;
+    min-height: 135px;
+    margin: 0;
+    padding: 20px;
   
     border: 1px solid var(--home-border);
-    border-radius: 16px;
+    border-radius: 11px;
   
+    background: #fafafa;
     color: var(--home-muted);
-    font-size: 13px;
+  
+    font-size: 12px;
+    line-height: 1.6;
     text-align: center;
   }
   
   .customer-home__spinner {
     color: var(--home-primary);
-    animation: customer-home-spin 1s linear infinite;
+  
+    animation:
+      customer-home-spin 1s linear infinite;
   }
   
   @keyframes customer-home-spin {
@@ -374,90 +307,170 @@
   
   .customer-home__error p {
     margin: 0;
-    line-height: 1.6;
   }
   
   .customer-home__error button {
     display: inline-flex;
     align-items: center;
-    gap: 7px;
+    justify-content: center;
+    gap: 8px;
   
-    padding: 10px 15px;
-    border: none;
-    border-radius: 10px;
+    min-height: 37px;
+    padding: 8px 14px;
   
-    background: var(--home-primary);
-    color: #ffffff;
+    border: 1px solid var(--home-primary);
+    border-radius: 8px;
+  
+    background: #ffffff;
+    color: var(--home-primary);
+  
     font-size: 12px;
+    font-weight: 700;
   
     cursor: pointer;
   }
   
-  /* 이용 방법 */
-  
-  .customer-home__how {
-    margin-top: 38px;
+  .customer-home__error button svg {
+    display: block;
+    flex-shrink: 0;
   }
   
-  .customer-home__steps {
-    padding: 5px 0;
+  /* ==========================================
+     추천 안내 영역
+  ========================================== */
+  
+  .customer-home__suggestion {
+    margin-top: 34px;
   }
   
-  .customer-home__step {
-    display: flex;
-    align-items: center;
-    gap: 14px;
+  .customer-home__suggestion-card {
+    overflow: hidden;
   
-    padding: 12px 3px;
+    border: 1px solid var(--home-border);
+    border-radius: 14px;
+  
+    background: #ffffff;
   }
   
-  .customer-home__step-icon {
+  /* 두 가게의 상품 조합을 표현한 안내 이미지 */
+  
+  .customer-home__suggestion-visual {
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
+    gap: 13px;
   
-    width: 45px;
-    height: 45px;
+    min-height: 125px;
+    padding: 20px;
   
-    border-radius: 13px;
-    background: #fff2ed;
+    background: #fff5f0;
+  }
+  
+  .customer-home__visual-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    width: 62px;
+    height: 62px;
+  
+    border: 1px solid #f9d7cc;
+    border-radius: 16px;
+  
+    background: #ffffff;
     color: var(--home-primary);
   }
   
-  .customer-home__step strong {
+  .customer-home__visual-icon svg {
     display: block;
-    margin-bottom: 6px;
-  
-    font-size: 13px;
-    font-weight: 800;
   }
   
-  .customer-home__step p {
-    margin: 0;
+  .customer-home__visual-icon--second {
+    background: #ffe5da;
+  }
+  
+  .customer-home__visual-plus {
+    color: #cc775e;
+    font-size: 24px;
+    font-weight: 500;
+  }
+  
+  .customer-home__suggestion-content {
+    padding: 19px 17px 20px;
+  }
+  
+  .customer-home__suggestion-content > strong {
+    display: block;
+  
+    color: var(--home-text);
+  
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.5;
+  
+    word-break: keep-all;
+  }
+  
+  .customer-home__suggestion-content > p {
+    margin: 9px 0 0;
   
     color: var(--home-muted);
-    font-size: 11px;
-    line-height: 1.6;
+  
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.7;
+  
+    word-break: keep-all;
   }
   
-  /* 예약 내역 배너 */
+  .customer-home__suggestion-content > button {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
   
-  .customer-home__reservation-banner {
+    margin-top: 15px;
+    padding: 0;
+  
+    border: none;
+    background: transparent;
+  
+    color: var(--home-primary);
+  
+    font-size: 12px;
+    font-weight: 800;
+  
+    cursor: pointer;
+  }
+  
+  .customer-home__suggestion-content > button svg {
+    display: block;
+    flex-shrink: 0;
+  }
+  
+  /* ==========================================
+     예약 확인 바로가기
+  ========================================== */
+  
+  .customer-home__reservation-section {
+    margin-top: 25px;
+  }
+  
+  .customer-home__reservation-link {
     display: flex;
     align-items: center;
     gap: 13px;
   
     width: 100%;
-    margin-top: 31px;
-    padding: 19px 15px;
+    min-height: 79px;
   
-    border: 1px solid #ffe2d5;
-    border-radius: 16px;
+    padding: 15px 16px;
   
-    background: #fff8f4;
+    border: 1px solid #f5ded5;
+    border-radius: 12px;
+  
+    background: #fff8f5;
+  
     text-align: left;
-  
     cursor: pointer;
   }
   
@@ -467,53 +480,125 @@
     justify-content: center;
     flex-shrink: 0;
   
-    width: 45px;
-    height: 45px;
+    width: 42px;
+    height: 42px;
   
-    border-radius: 13px;
-    background: #ffe5dc;
+    border-radius: 10px;
+    background: #ffe9df;
+  
     color: var(--home-primary);
   }
   
-  .customer-home__reservation-banner > span:nth-child(2) {
+  .customer-home__reservation-icon svg {
+    display: block;
+  }
+  
+  .customer-home__reservation-text {
     display: flex;
     flex: 1;
     flex-direction: column;
-    gap: 6px;
+    gap: 5px;
+  
+    min-width: 0;
   }
   
-  .customer-home__reservation-banner strong {
+  .customer-home__reservation-text strong {
     color: var(--home-text);
+  
     font-size: 13px;
+    font-weight: 800;
+    line-height: 1.5;
   }
   
-  .customer-home__reservation-banner small {
+  .customer-home__reservation-text small {
     color: var(--home-muted);
+  
     font-size: 11px;
+    line-height: 1.5;
   }
   
-  .customer-home__reservation-banner > svg {
+  .customer-home__reservation-link > svg {
+    display: block;
+    flex-shrink: 0;
     color: var(--home-primary);
   }
   
-  /* 하단 내비게이션 */
+  /* ==========================================
+     미구현 기능 안내
+  ========================================== */
+  
+  .customer-home__notice {
+    position: fixed;
+    left: 50%;
+    bottom: calc(
+      88px + env(safe-area-inset-bottom)
+    );
+  
+    z-index: 50;
+  
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+  
+    width: calc(100% - 32px);
+    max-width: 398px;
+  
+    padding: 13px 15px;
+  
+    border: 1px solid #f0d9cf;
+    border-radius: 10px;
+  
+    background: #fff9f6;
+    color: #603c32;
+  
+    box-shadow: 0 6px 20px rgb(0 0 0 / 9%);
+  
+    font-size: 12px;
+    line-height: 1.5;
+  
+    transform: translateX(-50%);
+  }
+  
+  .customer-home__notice button {
+    flex-shrink: 0;
+  
+    border: none;
+    background: transparent;
+  
+    color: var(--home-primary);
+  
+    font-size: 12px;
+    font-weight: 800;
+  
+    cursor: pointer;
+  }
+  
+  /* ==========================================
+     하단 내비게이션
+  ========================================== */
   
   .customer-home__bottom-nav {
-    position: sticky;
+    position: fixed;
+    left: 50%;
     bottom: 0;
-    z-index: 30;
+    z-index: 40;
   
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   
     width: 100%;
+    max-width: 430px;
+  
     min-height: 68px;
   
-    margin-top: 14px;
-    padding-bottom: env(safe-area-inset-bottom);
+    padding: 3px 7px
+      env(safe-area-inset-bottom);
   
-    border-top: 1px solid #eee8e4;
+    border-top: 1px solid #eeeeee;
     background: #ffffff;
+  
+    transform: translateX(-50%);
   }
   
   .customer-home__nav-item {
@@ -523,58 +608,92 @@
     justify-content: center;
     gap: 5px;
   
-    min-height: 68px;
-    padding: 8px 0;
+    min-width: 0;
+    min-height: 62px;
+  
+    padding: 8px 3px;
   
     border: none;
     background: transparent;
   
-    color: #aaa19e;
+    color: #959595;
+  
     font-size: 10px;
-    font-weight: 700;
+    font-weight: 600;
+    line-height: 1.4;
   
     cursor: pointer;
   }
   
+  .customer-home__nav-item > svg {
+    display: block;
+  
+    width: 21px;
+    height: 21px;
+  
+    flex-shrink: 0;
+  }
+  
+  .customer-home__nav-item > span {
+    text-align: center;
+    white-space: nowrap;
+  }
+  
   .customer-home__nav-item--active {
+    color: var(--home-primary);
+    font-weight: 800;
+  }
+  
+  .customer-home__nav-item:hover {
     color: var(--home-primary);
   }
   
-  /* 반응형 */
+  /* ==========================================
+     작은 모바일 화면
+  ========================================== */
   
   @media (max-width: 360px) {
     .customer-home__header {
-      padding: 0 16px;
+      padding: 0 18px;
     }
   
     .customer-home__body {
-      padding: 18px 15px 25px;
+      padding: 16px 18px 30px;
     }
   
-    .customer-home__hero {
-      padding: 25px 19px;
-    }
-  
-    .customer-home__hero h1 {
-      font-size: 23px;
-    }
-  
-    .customer-home__hero-art {
-      right: -35px;
-      opacity: 0.65;
+    .customer-home__intro h1 {
+      font-size: 22px;
     }
   
     .customer-home__section-heading h2 {
-      font-size: 18px;
+      font-size: 15px;
+    }
+  
+    .customer-home__category-button {
+      font-size: 12px;
+    }
+  
+    .customer-home__suggestion-content {
+      padding: 16px;
+    }
+  
+    .customer-home__nav-item {
+      font-size: 9px;
     }
   }
   
-  .customer-home__bottom-nav {
-    position: fixed;
-    left: 50%;
-    bottom: 0;
-    transform: translateX(-50%);
-    width: 100%;
-    max-width: 430px;
-    margin-top: 0;
+  /* ==========================================
+     접근성: 모션 감소 설정
+  ========================================== */
+  
+  @media (prefers-reduced-motion: reduce) {
+    .customer-home__spinner {
+      animation: none;
+    }
+  
+    .customer-home__primary-button,
+    .customer-home__category-button {
+      transition: none;
+    }
   }
+  

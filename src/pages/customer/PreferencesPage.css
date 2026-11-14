@@ -1,22 +1,48 @@
 
-/* 맞춤 질문 화면 */
+/* ==========================================
+   구매 조건 / 맞춤 질문 페이지
+========================================== */
+
 .preferences-page {
+    --preferences-primary: #bb4d32;
+    --preferences-primary-hover: #a6422c;
+    --preferences-accent: #e67f67;
+    --preferences-text: #252525;
+    --preferences-muted: #777777;
+    --preferences-border: #e8e8e8;
+    --preferences-soft: #fff1eb;
+  
     width: 100%;
     min-height: 100dvh;
+  
     background: #ffffff;
-    color: var(--color-text);
+    color: var(--preferences-text);
+  
+    font-family: inherit;
+    box-sizing: border-box;
   }
   
-  /* 헤더 */
+  .preferences-page *,
+  .preferences-page *::before,
+  .preferences-page *::after {
+    box-sizing: border-box;
+  }
+  
+  /* ==========================================
+     상단 헤더
+  ========================================== */
+  
   .preferences-page__header {
     display: flex;
     align-items: center;
     justify-content: space-between;
   
-    height: 76px;
+    width: 100%;
+    height: 64px;
     padding: 0 22px;
   
-    background-color: #f3b4b4;
+    background: #ffffff;
+    border-bottom: 1px solid #f5f5f5;
   }
   
   .preferences-page__back {
@@ -24,383 +50,655 @@
     align-items: center;
     justify-content: center;
   
-    width: 36px;
-    height: 36px;
+    width: 34px;
+    height: 34px;
     padding: 0;
   
     border: none;
     background: transparent;
-    color: var(--color-text);
+    color: var(--preferences-text);
+  
+    cursor: pointer;
   }
   
-  .preferences-page__logo {
-    display: flex;
-    align-items: center;
-    gap: 6px;
+  .preferences-page__back svg {
+    display: block;
+    flex-shrink: 0;
   }
   
-  .preferences-page__logo-symbol {
-    width: 30px;
-    height: 36px;
-    object-fit: contain;
-  }
+  .preferences-page__header-title {
+    margin: 0;
   
-  .preferences-page__logo-text {
-    width: 88px;
-    height: auto;
-    object-fit: contain;
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1.4;
+    letter-spacing: -0.4px;
   }
   
   .preferences-page__header-spacer {
-    width: 36px;
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
   }
   
-  /* 진행 상태 */
+  /* ==========================================
+     폼 전체
+  ========================================== */
+  
+  .preferences-page__form {
+    display: flex;
+    flex-direction: column;
+  
+    min-height: calc(100dvh - 64px);
+  }
+  
+  /* ==========================================
+     진행 상태
+  ========================================== */
+  
   .preferences-page__progress {
-    padding: 22px 25px 0;
+    padding: 24px 24px 0;
   }
   
-  .preferences-page__progress > span {
-    display: block;
-    margin-bottom: 10px;
+  .preferences-page__progress-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   
-    color: var(--color-primary);
+    margin-bottom: 12px;
+  }
+  
+  .preferences-page__progress-top span {
+    color: var(--preferences-muted);
     font-size: 12px;
     font-weight: 700;
   }
   
+  .preferences-page__progress-top span:first-child {
+    color: var(--preferences-primary);
+  }
+  
   .preferences-page__progress-track {
     width: 100%;
-    height: 6px;
+    height: 5px;
+  
     overflow: hidden;
   
     border-radius: 100px;
-    background: #f2f2f2;
+    background: #f0eeec;
   }
   
   .preferences-page__progress-fill {
-    width: 66.666%;
     height: 100%;
   
     border-radius: 100px;
-    background: var(--color-primary);
+    background: var(--preferences-primary);
+  
+    transition: width 0.25s ease;
   }
   
-  /* 본문 */
+  /* ==========================================
+     본문
+  ========================================== */
+  
   .preferences-page__content {
-    padding: 30px 25px 45px;
+    flex: 1;
+  
+    padding: 35px 24px 36px;
+  
+    animation: preferences-fade-in 0.18s ease-out;
   }
   
-  .preferences-page__intro {
-    margin-bottom: 32px;
+  @keyframes preferences-fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(5px);
+    }
+  
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .preferences-page__step {
+    width: 100%;
   }
   
   .preferences-page__eyebrow {
-    display: block;
-    margin-bottom: 12px;
+    display: inline-block;
   
-    color: var(--color-primary);
-    font-size: 13px;
-    font-weight: 700;
+    margin-bottom: 15px;
+  
+    color: var(--preferences-primary);
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.5;
   }
   
-  .preferences-page__intro h1 {
+  .preferences-page__question-title {
     margin: 0;
   
-    font-size: 27px;
+    color: var(--preferences-text);
+  
+    font-size: 24px;
     font-weight: 800;
-    line-height: 1.35;
-    letter-spacing: -1px;
+    line-height: 1.45;
+    letter-spacing: -0.8px;
+  
+    overflow-wrap: anywhere;
   }
   
-  .preferences-page__intro p {
-    margin: 15px 0 0;
+  .preferences-page__description {
+    margin: 13px 0 0;
   
-    color: var(--color-text-secondary);
-    font-size: 14px;
-    line-height: 1.6;
+    color: var(--preferences-muted);
+    font-size: 13px;
+    line-height: 1.8;
   }
   
-  /* 질문 폼 */
-  .preferences-page__form {
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-  }
+  /* ==========================================
+     일반 질문 답변
+  ========================================== */
   
-  .preferences-page__field {
+  .preferences-page__answer-section {
     display: flex;
     flex-direction: column;
     gap: 12px;
+  
+    margin-top: 30px;
   }
   
-  .preferences-page__field > label {
-    display: flex;
-    align-items: flex-start;
-    gap: 7px;
+  .preferences-page__input-caption {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
   
-    font-size: 15px;
+    min-height: 21px;
+  
+    color: var(--preferences-text);
+    font-size: 13px;
     font-weight: 700;
     line-height: 1.5;
   }
   
-  .preferences-page__question-number {
+  .preferences-page__input-caption svg {
+    display: block;
+  
+    width: 17px;
+    height: 17px;
+  
     flex-shrink: 0;
-    color: var(--color-primary);
-    font-weight: 800;
+  
+    color: var(--preferences-primary);
   }
   
-  .preferences-page__required {
-    color: var(--color-primary);
-  }
+  .preferences-page__answer-section textarea {
+    display: block;
   
-  /* 텍스트 입력 */
-  .preferences-page__field textarea {
     width: 100%;
-    min-height: 94px;
-    padding: 14px 15px;
+    min-height: 128px;
   
-    border: 1px solid var(--color-border);
+    padding: 16px;
+  
+    border: 1px solid var(--preferences-border);
     border-radius: 12px;
   
-    background-color: #ffffff;
-    color: var(--color-text);
+    background: #ffffff;
+    color: var(--preferences-text);
   
+    font-family: inherit;
     font-size: 14px;
-    line-height: 1.6;
+    font-weight: 400;
+    line-height: 1.7;
   
     outline: none;
     resize: vertical;
   }
   
-  .preferences-page__field textarea::placeholder {
+  .preferences-page__answer-section textarea::placeholder {
     color: #aaaaaa;
   }
   
-  .preferences-page__field textarea:focus {
-    border-color: var(--color-primary);
+  .preferences-page__answer-section textarea:focus {
+    border-color: var(--preferences-primary);
   }
   
-  /* 예산 입력 */
+  .preferences-page__input-meta {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  
+    color: #929292;
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 1.6;
+  }
+  
+  .preferences-page__input-meta span:last-child {
+    white-space: nowrap;
+  }
+  
+  /* ==========================================
+     예산 입력
+  ========================================== */
+  
+  .preferences-page__budget-section {
+    margin-top: 30px;
+  }
+  
   .preferences-page__input-wrapper {
     display: flex;
     align-items: center;
     gap: 10px;
   
     width: 100%;
-    height: 54px;
-    padding: 0 15px;
+    height: 56px;
   
-    border: 1px solid var(--color-border);
+    margin-top: 12px;
+    padding: 0 16px;
+  
+    border: 1px solid var(--preferences-border);
     border-radius: 12px;
+  
+    background: #ffffff;
   }
   
   .preferences-page__input-wrapper:focus-within {
-    border-color: var(--color-primary);
+    border-color: var(--preferences-primary);
   }
   
   .preferences-page__input-icon {
+    display: block;
     flex-shrink: 0;
-    color: var(--color-primary);
+    color: var(--preferences-primary);
   }
   
   .preferences-page__input-wrapper input {
+    flex: 1;
+  
     width: 100%;
     min-width: 0;
     height: 100%;
+  
+    padding: 0;
   
     border: none;
     outline: none;
   
     background: transparent;
-    color: var(--color-text);
+    color: var(--preferences-text);
+  
+    font-family: inherit;
     font-size: 15px;
+    font-weight: 500;
+  }
+  
+  .preferences-page__input-wrapper input::placeholder {
+    color: #aaaaaa;
   }
   
   .preferences-page__unit {
     flex-shrink: 0;
-    color: var(--color-text-secondary);
-    font-size: 14px;
-  }
   
-  /* 수령 날짜·시간 */
-  .preferences-page__pickup-section {
-    margin-top: 8px;
-    padding-top: 28px;
-  
-    border-top: 1px solid #eeeeee;
-  }
-  
-  .preferences-page__pickup-section h2 {
-    margin: 0;
-  
-    font-size: 17px;
-    font-weight: 800;
-    line-height: 1.5;
-  }
-  
-  .preferences-page__pickup-section > p {
-    margin: 10px 0 23px;
-  
-    color: var(--color-text-secondary);
+    color: var(--preferences-muted);
     font-size: 13px;
-    line-height: 1.6;
+    font-weight: 500;
   }
+  
+  .preferences-page__hint {
+    margin: 12px 0 0;
+  
+    color: var(--preferences-muted);
+    font-size: 12px;
+    line-height: 1.7;
+  }
+  
+  /* ==========================================
+     수령 날짜 / 시간
+  ========================================== */
   
   .preferences-page__pickup-fields {
     display: flex;
     flex-direction: column;
-    gap: 17px;
+    gap: 23px;
+  
+    margin-top: 30px;
   }
   
   .preferences-page__pickup-field {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-  }
+    gap: 12px;
   
-  .preferences-page__pickup-field > span {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-  
-    color: var(--color-text);
-    font-size: 13px;
-    font-weight: 700;
-  }
-  
-  .preferences-page__pickup-field > span svg {
-    color: var(--color-primary);
+    width: 100%;
   }
   
   .preferences-page__pickup-field input {
     display: block;
+  
     width: 100%;
-    height: 53px;
-    padding: 0 15px;
+    min-width: 0;
+    height: 56px;
   
-    border: 1px solid var(--color-border);
+    padding: 0 16px;
+  
+    border: 1px solid var(--preferences-border);
     border-radius: 12px;
-    outline: none;
   
-    background-color: #ffffff;
-    color: var(--color-text);
+    background: #ffffff;
+    color: var(--preferences-text);
   
+    font-family: inherit;
     font-size: 14px;
+    font-weight: 400;
+  
+    outline: none;
   }
   
   .preferences-page__pickup-field input:focus {
-    border-color: var(--color-primary);
+    border-color: var(--preferences-primary);
   }
   
-  /* 오류 및 로딩 */
+  .preferences-page__info-box {
+    margin-top: 25px;
+    padding: 15px 16px;
+  
+    border-radius: 10px;
+  
+    background: var(--preferences-soft);
+    color: var(--preferences-primary);
+  
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.8;
+  }
+  
+  /* ==========================================
+     최종 조건 확인
+  ========================================== */
+  
+  .preferences-page__summary {
+    margin-top: 27px;
+  
+    border-top: 1px solid var(--preferences-border);
+    border-bottom: 1px solid var(--preferences-border);
+  }
+  
+  .preferences-page__summary-row {
+    display: grid;
+    grid-template-columns: 105px minmax(0, 1fr);
+    gap: 13px;
+  
+    padding: 14px 0;
+  
+    border-bottom: 1px solid #f3f3f3;
+  }
+  
+  .preferences-page__summary-row:last-child {
+    border-bottom: none;
+  }
+  
+  .preferences-page__summary-row > span {
+    color: var(--preferences-muted);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.7;
+  
+    overflow-wrap: anywhere;
+  }
+  
+  .preferences-page__summary-row > strong {
+    min-width: 0;
+  
+    color: var(--preferences-text);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.7;
+  
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+  }
+  
+  .preferences-page__edit-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    width: 100%;
+    min-height: 46px;
+  
+    margin-top: 20px;
+  
+    border: none;
+    border-radius: 10px;
+  
+    background: var(--preferences-soft);
+    color: var(--preferences-primary);
+  
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+  
+    cursor: pointer;
+  }
+  
+  .preferences-page__edit-button:hover:not(:disabled) {
+    background: #ffe5d9;
+  }
+  
+  /* ==========================================
+     오류 메시지
+  ========================================== */
+  
+  .preferences-page__error {
+    margin: 20px 0 0;
+    padding: 13px 15px;
+  
+    border-radius: 10px;
+  
+    background: #fff0ed;
+    color: #d44535;
+  
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.7;
+  
+    overflow-wrap: anywhere;
+  }
+  
+  /* ==========================================
+     하단 고정 버튼
+  ========================================== */
+  
+  .preferences-page__footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
+  
+    margin-top: auto;
+  
+    padding: 14px 24px
+      max(20px, env(safe-area-inset-bottom));
+  
+    border-top: 1px solid #f4f4f4;
+    background: #ffffff;
+  }
+  
+  .preferences-page__submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  
+    width: 100%;
+    min-height: 54px;
+  
+    padding: 12px 16px;
+  
+    border: none;
+    border-radius: 10px;
+  
+    background: var(--preferences-primary);
+    color: #ffffff;
+  
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.5;
+  
+    cursor: pointer;
+  }
+  
+  .preferences-page__submit svg {
+    display: block;
+    flex-shrink: 0;
+  
+    width: 18px;
+    height: 18px;
+  }
+  
+  .preferences-page__submit:hover:not(:disabled) {
+    background: var(--preferences-primary-hover);
+  }
+  
+  .preferences-page__submit:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+  
+  /* ==========================================
+     로딩 / 오류 / 빈 데이터
+  ========================================== */
+  
   .preferences-page__message {
-    padding: 30px 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 13px;
+  
+    min-height: 250px;
+    margin: 25px 24px;
+    padding: 25px 18px;
   
     border-radius: 14px;
     background: #fafafa;
   
-    color: var(--color-text-secondary);
+    color: var(--preferences-muted);
+    font-size: 13px;
+    line-height: 1.7;
     text-align: center;
-    font-size: 14px;
-    line-height: 1.6;
+  }
+  
+  .preferences-page__message p {
+    margin: 0;
   }
   
   .preferences-page__message button {
     display: inline-flex;
     align-items: center;
-    gap: 7px;
+    justify-content: center;
+    gap: 8px;
   
-    margin-top: 12px;
-    padding: 10px 14px;
+    min-height: 40px;
+    padding: 10px 15px;
   
-    border: 1px solid var(--color-primary);
+    border: 1px solid var(--preferences-primary);
     border-radius: 9px;
   
-    background: white;
-    color: var(--color-primary);
-  }
+    background: #ffffff;
+    color: var(--preferences-primary);
   
-  .preferences-page__error {
-    margin: 0;
-    padding: 12px 14px;
-  
-    border-radius: 10px;
-  
-    background: #fff1ee;
-    color: #d94b40;
-  
-    font-size: 13px;
-    line-height: 1.6;
-  }
-  
-  /* 제출 버튼 */
-  .preferences-page__submit {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 9px;
-  
-    width: 100%;
-    height: 54px;
-  
-    margin-top: 12px;
-  
-    border: none;
-    border-radius: 12px;
-  
-    background: var(--color-primary);
-    color: #ffffff;
-  
-    font-size: 15px;
+    font-family: inherit;
+    font-size: 12px;
     font-weight: 700;
+  
+    cursor: pointer;
   }
   
-  .preferences-page__submit:hover:not(:disabled) {
-    background: var(--color-primary-hover);
+  .preferences-page__message button svg {
+    display: block;
+    flex-shrink: 0;
   }
   
-  .preferences-page__submit:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
+  /* ==========================================
+     구매 목적 미선택
+  ========================================== */
   
   .preferences-page__empty {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 20px;
+    gap: 18px;
   
     min-height: 100dvh;
     padding: 25px;
+  
     text-align: center;
   }
   
   .preferences-page__empty h2 {
+    margin: 0;
     font-size: 18px;
+    font-weight: 800;
   }
   
   .preferences-page__empty button {
     padding: 13px 20px;
+  
     border: none;
     border-radius: 10px;
   
-    background: var(--color-primary);
+    background: var(--preferences-primary);
     color: #ffffff;
+  
+    font-family: inherit;
     font-weight: 700;
+    cursor: pointer;
   }
   
-  /* 작은 모바일 화면 */
+  /* ==========================================
+     작은 모바일 화면
+  ========================================== */
+  
   @media (max-width: 360px) {
     .preferences-page__header {
       padding: 0 18px;
     }
   
-    .preferences-page__progress,
-    .preferences-page__content {
+    .preferences-page__progress {
       padding-left: 18px;
       padding-right: 18px;
+    }
+  
+    .preferences-page__content {
+      padding: 30px 18px 30px;
+    }
+  
+    .preferences-page__footer {
+      padding-left: 18px;
+      padding-right: 18px;
+    }
+  
+    .preferences-page__question-title {
+      font-size: 22px;
+    }
+  
+    .preferences-page__summary-row {
+      grid-template-columns: 90px minmax(0, 1fr);
+    }
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+    .preferences-page__content {
+      animation: none;
+    }
+  
+    .preferences-page__progress-fill {
+      transition: none;
     }
   }
   

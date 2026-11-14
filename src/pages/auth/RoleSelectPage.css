@@ -1,4 +1,4 @@
-/* 사용자 선택 화면 전체 */
+/* 사용자 선택 화면 */
 .role-page {
     display: flex;
     align-items: center;
@@ -10,20 +10,20 @@
     background-color: #ffffff;
   }
   
-  /* 콘텐츠 영역 */
+  /* 전체 콘텐츠 */
   .role-page__content {
     width: 100%;
   }
   
-  /* 같이팔장 로고 영역 */
+  /* 로고 */
   .role-page__logo {
     display: flex;
     align-items: center;
     gap: 8px;
+  
     width: fit-content;
   }
   
-  /* 심볼 로고 */
   .role-page__symbol {
     display: block;
   
@@ -34,7 +34,6 @@
     flex-shrink: 0;
   }
   
-  /* 글씨 로고 */
   .role-page__brand {
     display: block;
   
@@ -61,10 +60,11 @@
     gap: 20px;
   }
   
-  /* 공통 선택 카드 */
+  /* 선택 카드 */
   .role-page__card {
     display: flex;
     align-items: center;
+    gap: 12px;
   
     width: 100%;
     min-height: 112px;
@@ -75,33 +75,40 @@
     border-radius: 17px;
   
     text-align: left;
+  
     transition:
       border-color 0.2s ease,
       background-color 0.2s ease;
   }
   
-  /* 카드 마우스 오버 */
   .role-page__card:hover {
     border-color: var(--color-primary);
     background-color: #fff8f6;
   }
   
-  /* 카드 선택 시 */
   .role-page__card:active {
     background-color: #fff0eb;
   }
   
-  /* 카드 아이콘 */
+  .role-page__card:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 3px;
+  }
+  
+  /* Lucide 아이콘 */
   .role-page__icon {
     display: flex;
     align-items: center;
     justify-content: center;
   
-    width: 64px;
+    width: 56px;
+    height: 56px;
+  
     flex-shrink: 0;
   
     color: var(--color-primary);
-    font-size: 42px;
+    background-color: #fff2ed;
+    border-radius: 15px;
   }
   
   /* 카드 설명 */
@@ -110,32 +117,29 @@
     flex: 1;
     flex-direction: column;
     gap: 6px;
+  
+    min-width: 0;
   }
   
-  /* 카드 제목 */
   .role-page__description strong {
     color: var(--color-text);
     font-size: 16px;
     font-weight: 800;
   }
   
-  /* 카드 부가 설명 */
   .role-page__description span {
-    color: var(--color-text);
+    color: var(--color-text-secondary);
     font-size: 13px;
-    line-height: 1.45;
+    line-height: 1.5;
   }
   
-  /* 오른쪽 화살표 */
+  /* 화살표 아이콘 */
   .role-page__arrow {
-    margin-left: 8px;
-  
+    flex-shrink: 0;
     color: var(--color-primary);
-    font-size: 31px;
-    font-weight: 300;
   }
   
-  /* 작은 모바일 화면 대응 */
+  /* 작은 모바일 화면 */
   @media (max-width: 360px) {
     .role-page {
       padding-left: 18px;
@@ -143,7 +147,13 @@
     }
   
     .role-page__card {
+      gap: 9px;
       padding: 16px 12px;
+    }
+  
+    .role-page__icon {
+      width: 48px;
+      height: 48px;
     }
   
     .role-page__symbol {

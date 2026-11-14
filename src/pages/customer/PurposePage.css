@@ -1,0 +1,354 @@
+
+/* 구매 목적 선택 화면 */
+.purpose-page {
+    display: flex;
+    flex-direction: column;
+  
+    width: 100%;
+    min-height: 100dvh;
+  
+    background: #ffffff;
+    color: var(--color-text);
+  }
+  
+  /* 상단 헤더 */
+  .purpose-page__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  
+    height: 76px;
+    padding: 0 22px;
+  
+    background-color: #f3b4b4;
+  }
+  
+  .purpose-page__back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    width: 36px;
+    height: 36px;
+  
+    padding: 0;
+    border: none;
+    background: transparent;
+  
+    color: var(--color-text);
+  }
+  
+  .purpose-page__logo {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  
+  .purpose-page__logo-symbol {
+    display: block;
+    width: 30px;
+    height: 36px;
+    object-fit: contain;
+  }
+  
+  .purpose-page__logo-text {
+    display: block;
+    width: 88px;
+    height: auto;
+    object-fit: contain;
+  }
+  
+  .purpose-page__header-spacer {
+    width: 36px;
+  }
+  
+  /* 진행 상태 */
+  .purpose-page__progress {
+    padding: 22px 25px 0;
+  }
+  
+  .purpose-page__progress-label {
+    display: block;
+    margin-bottom: 10px;
+  
+    color: var(--color-primary);
+    font-size: 12px;
+    font-weight: 700;
+  }
+  
+  .purpose-page__progress-track {
+    width: 100%;
+    height: 6px;
+  
+    overflow: hidden;
+    border-radius: 100px;
+    background: #f2f2f2;
+  }
+  
+  .purpose-page__progress-fill {
+    width: 33.333%;
+    height: 100%;
+    border-radius: 100px;
+    background: var(--color-primary);
+  }
+  
+  /* 본문 */
+  .purpose-page__content {
+    flex: 1;
+    padding: 30px 25px 35px;
+  }
+  
+  .purpose-page__intro {
+    margin-bottom: 34px;
+  }
+  
+  .purpose-page__eyebrow {
+    display: block;
+    margin-bottom: 12px;
+  
+    color: var(--color-primary);
+    font-size: 13px;
+    font-weight: 700;
+  }
+  
+  .purpose-page__intro h1 {
+    margin: 0;
+  
+    font-size: 27px;
+    font-weight: 800;
+    line-height: 1.35;
+    letter-spacing: -1px;
+  }
+  
+  .purpose-page__intro p {
+    margin: 15px 0 0;
+  
+    color: var(--color-text-secondary);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  
+  /* 공통 섹션 */
+  .purpose-page__section {
+    margin-bottom: 32px;
+  }
+  
+  .purpose-page__section-title {
+    margin: 0 0 15px;
+  
+    font-size: 15px;
+    font-weight: 800;
+  }
+  
+  /* 대분류 카드 */
+  .purpose-page__main-list {
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+  }
+  
+  .purpose-page__main-card {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+  
+    width: 100%;
+    min-height: 73px;
+    padding: 14px 16px;
+  
+    border: 1px solid #e8e8e8;
+    border-radius: 15px;
+  
+    background: #ffffff;
+    color: var(--color-text);
+  
+    text-align: left;
+  
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease;
+  }
+  
+  .purpose-page__main-card.is-selected {
+    border-color: var(--color-primary);
+    background-color: #fff5f1;
+  }
+  
+  .purpose-page__main-card:focus-visible,
+  .purpose-page__sub-card:focus-visible,
+  .purpose-page__next:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 3px;
+  }
+  
+  .purpose-page__main-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+  
+    border-radius: 12px;
+  
+    background-color: #fff1ed;
+    color: var(--color-primary);
+  }
+  
+  .purpose-page__main-card > span {
+    flex: 1;
+    font-size: 15px;
+    font-weight: 700;
+  }
+  
+  .purpose-page__main-arrow {
+    color: #a5a5a5;
+  }
+  
+  .purpose-page__main-card.is-selected
+  .purpose-page__main-arrow {
+    color: var(--color-primary);
+  }
+  
+  /* 중분류 카드 */
+  .purpose-page__sub-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  
+  .purpose-page__sub-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 7px;
+  
+    min-height: 54px;
+    padding: 13px 12px;
+  
+    border: 1px solid #e8e8e8;
+    border-radius: 12px;
+  
+    background: #ffffff;
+    color: var(--color-text);
+  
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  
+  .purpose-page__sub-card.is-selected {
+    border-color: var(--color-primary);
+    background-color: #fff5f1;
+    color: var(--color-primary);
+  }
+  
+  .purpose-page__sub-card:disabled {
+    background-color: #fafafa;
+    color: #a9a9a9;
+    cursor: not-allowed;
+  }
+  
+  .purpose-page__sub-card small {
+    flex-shrink: 0;
+    color: #aaaaaa;
+    font-size: 10px;
+    font-weight: 400;
+  }
+  
+  .purpose-page__notice {
+    margin: 14px 0 0;
+  
+    color: #999999;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+  
+  /* 오류 및 로딩 */
+  .purpose-page__message {
+    padding: 30px 15px;
+  
+    border-radius: 14px;
+    background: #fafafa;
+  
+    color: var(--color-text-secondary);
+    text-align: center;
+    font-size: 14px;
+  }
+  
+  .purpose-page__retry {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+  
+    margin-top: 12px;
+    padding: 10px 14px;
+  
+    border: 1px solid var(--color-primary);
+    border-radius: 9px;
+  
+    background: white;
+    color: var(--color-primary);
+  }
+  
+  /* 하단 버튼 */
+  .purpose-page__footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+  
+    padding: 14px 25px max(20px, env(safe-area-inset-bottom));
+  
+    border-top: 1px solid #f2f2f2;
+    background: #ffffff;
+  }
+  
+  .purpose-page__next {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+  
+    width: 100%;
+    height: 52px;
+  
+    border: none;
+    border-radius: 11px;
+  
+    background: var(--color-primary);
+    color: #ffffff;
+  
+    font-size: 15px;
+    font-weight: 700;
+  }
+  
+  .purpose-page__next:disabled {
+    background: #e2e2e2;
+    color: #999999;
+    cursor: not-allowed;
+  }
+  
+  /* 작은 화면 */
+  @media (max-width: 360px) {
+    .purpose-page__header {
+      padding: 0 18px;
+    }
+  
+    .purpose-page__progress {
+      padding-left: 18px;
+      padding-right: 18px;
+    }
+  
+    .purpose-page__content {
+      padding-left: 18px;
+      padding-right: 18px;
+    }
+  
+    .purpose-page__footer {
+      padding-left: 18px;
+      padding-right: 18px;
+    }
+  }
+  

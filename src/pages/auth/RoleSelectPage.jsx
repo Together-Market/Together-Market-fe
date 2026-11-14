@@ -1,4 +1,9 @@
 import { useNavigate } from "react-router";
+import {
+  ShoppingBag,
+  Store,
+  ChevronRight,
+} from "lucide-react";
 
 import logoSymbol from "../../assets/logo-symbol.svg";
 import logoText from "../../assets/logo-text.svg";
@@ -9,10 +14,7 @@ function RoleSelectPage() {
   const navigate = useNavigate();
 
   const handleRoleSelect = (role) => {
-    // 선택한 역할 임시 저장
     sessionStorage.setItem("selectedRole", role);
-
-    // 로그인 화면으로 이동
     navigate("/login");
   };
 
@@ -41,52 +43,72 @@ function RoleSelectPage() {
 
         {/* 사용자 유형 선택 */}
         <div className="role-page__options">
-          {/* 고객으로 시작 */}
+          {/* 고객 */}
           <button
             type="button"
             className="role-page__card"
             onClick={() => handleRoleSelect("CUSTOMER")}
           >
-            <span className="role-page__icon" aria-hidden="true">
-              ♧
-            </span>
+            <div
+              className="role-page__icon"
+              aria-hidden="true"
+            >
+              <ShoppingBag
+                size={36}
+                strokeWidth={1.8}
+              />
+            </div>
 
-            <span className="role-page__description">
+            <div className="role-page__description">
               <strong>고객으로 시작</strong>
+
               <span>
                 AI가 추천하는 상품을
                 <br />
                 여러 가게와 함께 구매해요
               </span>
-            </span>
+            </div>
 
-            <span className="role-page__arrow" aria-hidden="true">
-              ›
-            </span>
+            <ChevronRight
+              className="role-page__arrow"
+              size={24}
+              strokeWidth={2}
+              aria-hidden="true"
+            />
           </button>
 
-          {/* 사장님으로 시작 */}
+          {/* 사장님 */}
           <button
             type="button"
             className="role-page__card"
             onClick={() => handleRoleSelect("OWNER")}
           >
-            <span className="role-page__icon" aria-hidden="true">
-              ▣
-            </span>
+            <div
+              className="role-page__icon"
+              aria-hidden="true"
+            >
+              <Store
+                size={36}
+                strokeWidth={1.8}
+              />
+            </div>
 
-            <span className="role-page__description">
+            <div className="role-page__description">
               <strong>사장님으로 시작</strong>
+
               <span>
                 내 가게의 상품을 등록하고
                 <br />
                 공동 판매에 참여해요
               </span>
-            </span>
+            </div>
 
-            <span className="role-page__arrow" aria-hidden="true">
-              ›
-            </span>
+            <ChevronRight
+              className="role-page__arrow"
+              size={24}
+              strokeWidth={2}
+              aria-hidden="true"
+            />
           </button>
         </div>
       </div>

@@ -1,42 +1,75 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
-const LOGIN_PATH = import.meta.env.VITE_LOGIN_PATH;
 
-export async function login({ email, password }) {
-  if (!LOGIN_PATH) {
-    throw new Error(
-      "로그인 API 경로가 아직 설정되지 않았습니다."
-    );
-  }
-
-  const response = await fetch(
-    `${API_BASE_URL}${LOGIN_PATH}`,
-    {
+import {
+    apiRequest,
+    clearCsrfToken,
+    getCsrfToken,
+    isMockMode,
+  } from "./client";
+  
+  import {
+    mockLogin,
+    mockLogout,
+    mockGetCurrentUser,
+  } from "../mocks/authMock";
+  
+  // 로그인
+  export async function login({ email, password }) {
+    // 목업 모드
+    if (isMockMode) {
+      return mockLogin({ email, password });
+    }
+  
+    // 실제 API 로그인 요청
+    const user = await apiRequest("/auth/login", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify({
+      body: {
         email,
         password,
-      }),
-    }
-  );
-
-  if (!response.ok) {
-    let message = "로그인에 실패했습니다.";
-
+      },
+    });
+  
+    // 로그인 성공 후 세션이 변경되므로 CSRF 토큰 초기화
+    clearCsrfToken();
+  
+    // 새로운 세션에 맞는 CSRF 토큰 재조회
     try {
-      const error = await response.json();
-      message = error.message ?? message;
-    } catch {
-      // 응답 본문이 없는 경우 기본 메시지 사용
+      await getCsrfToken({ force: true });
+    } catch (error) {
+      console.warn(
+        "로그인은 성공했지만 CSRF 토큰 재조회에 실패했습니다.",
+        error
+      );
     }
-
-    throw new Error(message);
+  
+    return user;
   }
-
-  const result = await response.json();
-
-  return result.data;
-}
+  
+  // 현재 로그인 사용자 조회
+  export async function getCurrentUser() {
+    // 목업 모드
+    if (isMockMode) {
+      return mockGetCurrentUser();
+    }
+  
+    // 실제 API 요청
+    return apiRequest("/auth/me");
+  }
+  
+  // 로그아웃
+  export async function logout() {
+    // 목업 모드
+    if (isMockMode) {
+      return mockLogout();
+    }
+  
+    // 실제 API 로그아웃 요청
+    const result = await apiRequest("/auth/logout", {
+      method: "POST",
+    });
+  
+    // 로그아웃 성공 후 CSRF 토큰 초기화
+    clearCsrfToken();
+  
+    return result;
+  }
+  

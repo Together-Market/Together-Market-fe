@@ -1,0 +1,399 @@
+
+.recommendation-page {
+    min-height: 100dvh;
+    width: 100%;
+    background: #ffffff;
+    color: var(--color-text);
+  }
+  
+  /* 헤더 */
+  .recommendation-page__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 76px;
+    padding: 0 22px;
+    background: #f3b4b4;
+  }
+  
+  .recommendation-page__back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--color-text);
+  }
+  
+  .recommendation-page__logo {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  
+  .recommendation-page__logo-symbol {
+    width: 30px;
+    height: 36px;
+    object-fit: contain;
+  }
+  
+  .recommendation-page__logo-text {
+    width: 88px;
+    height: auto;
+    object-fit: contain;
+  }
+  
+  .recommendation-page__header-spacer {
+    width: 36px;
+  }
+  
+  /* 진행 상태 */
+  .recommendation-page__progress {
+    padding: 22px 25px 0;
+  }
+  
+  .recommendation-page__progress > span {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--color-primary);
+    font-size: 12px;
+    font-weight: 700;
+  }
+  
+  .recommendation-page__progress-track {
+    width: 100%;
+    height: 6px;
+    overflow: hidden;
+    border-radius: 100px;
+    background: #f2f2f2;
+  }
+  
+  .recommendation-page__progress-fill {
+    width: 100%;
+    height: 100%;
+    border-radius: 100px;
+    background: var(--color-primary);
+  }
+  
+  .recommendation-page__content {
+    padding: 32px 25px 60px;
+  }
+  
+  /* 로딩 화면 */
+  .recommendation-page__loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 65dvh;
+    text-align: center;
+  }
+  
+  .recommendation-page__loading-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 100px;
+    margin-bottom: 22px;
+    border-radius: 28px;
+    background: #fff1ec;
+    color: var(--color-primary);
+  }
+  
+  .recommendation-page__spinner {
+    color: var(--color-primary);
+    animation: recommendation-spin 1.2s linear infinite;
+  }
+  
+  @keyframes recommendation-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .recommendation-page__loading h1 {
+    margin: 23px 0 12px;
+    font-size: 25px;
+    font-weight: 800;
+    line-height: 1.4;
+    letter-spacing: -0.8px;
+  }
+  
+  .recommendation-page__loading p {
+    margin: 0;
+    color: var(--color-text-secondary);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  
+  /* 결과 상단 안내 */
+  .recommendation-page__intro {
+    margin-bottom: 27px;
+  }
+  
+  .recommendation-page__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 14px;
+    color: var(--color-primary);
+    font-size: 13px;
+    font-weight: 700;
+  }
+  
+  .recommendation-page__intro h1 {
+    margin: 0;
+    font-size: 27px;
+    line-height: 1.4;
+    font-weight: 800;
+    letter-spacing: -0.9px;
+  }
+  
+  .recommendation-page__intro p {
+    margin: 12px 0 0;
+    color: var(--color-text-secondary);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  
+  /* 추천 카드 */
+  .recommendation-page__list {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  
+  .recommendation-page__card {
+    padding: 19px;
+    border: 1px solid #ededed;
+    border-radius: 20px;
+    background: #ffffff;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.035);
+  }
+  
+  .recommendation-page__card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 19px;
+  }
+  
+  .recommendation-page__rank {
+    padding: 7px 10px;
+    border-radius: 8px;
+    background: #fff1eb;
+    color: var(--color-primary);
+    font-size: 12px;
+    font-weight: 800;
+  }
+  
+  .recommendation-page__availability {
+    color: #999999;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  
+  .recommendation-page__availability.is-available {
+    color: #25845b;
+  }
+  
+  /* 상품 목록 */
+  .recommendation-page__products {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  
+  .recommendation-page__product {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+  }
+  
+  .recommendation-page__product-image,
+  .recommendation-page__image-placeholder {
+    width: 92px;
+    height: 92px;
+    flex-shrink: 0;
+    border-radius: 13px;
+  }
+  
+  .recommendation-page__product-image {
+    display: block;
+    object-fit: cover;
+    background: #fff2ed;
+  }
+  
+  .recommendation-page__image-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff2ed;
+    color: var(--color-primary);
+  }
+  
+  .recommendation-page__product-info {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    min-width: 0;
+  }
+  
+  .recommendation-page__store {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--color-text-secondary);
+    font-size: 12px;
+  }
+  
+  .recommendation-page__product-info strong {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+  
+  .recommendation-page__price {
+    color: var(--color-text);
+    font-size: 14px;
+    font-weight: 700;
+  }
+  
+  /* 총금액 */
+  .recommendation-page__total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 19px 0;
+    padding-top: 18px;
+    border-top: 1px solid #eeeeee;
+  }
+  
+  .recommendation-page__total span {
+    color: var(--color-text-secondary);
+    font-size: 13px;
+  }
+  
+  .recommendation-page__total strong {
+    color: var(--color-primary);
+    font-size: 21px;
+    font-weight: 800;
+  }
+  
+  /* AI 추천 이유 */
+  .recommendation-page__reason {
+    padding: 15px;
+    border-radius: 12px;
+    background: #fff8f5;
+  }
+  
+  .recommendation-page__reason > div {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--color-primary);
+    font-size: 12px;
+    font-weight: 800;
+  }
+  
+  .recommendation-page__reason p {
+    margin: 10px 0 0;
+    color: #615651;
+    font-size: 13px;
+    line-height: 1.65;
+  }
+  
+  .recommendation-page__pickup-note {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin: 15px 0 17px;
+    color: #777777;
+    font-size: 11px;
+    line-height: 1.5;
+  }
+  
+  /* 자세히 보기 */
+  .recommendation-page__detail-button,
+  .recommendation-page__primary-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    width: 100%;
+    min-height: 51px;
+    border: none;
+    border-radius: 11px;
+    background: var(--color-primary);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  
+  .recommendation-page__detail-button:hover,
+  .recommendation-page__primary-button:hover {
+    background: var(--color-primary-hover);
+  }
+  
+  /* 실패·빈 결과 */
+  .recommendation-page__feedback {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 65dvh;
+    color: var(--color-primary);
+    text-align: center;
+  }
+  
+  .recommendation-page__feedback h1 {
+    margin: 22px 0 12px;
+    color: var(--color-text);
+    font-size: 21px;
+    font-weight: 800;
+  }
+  
+  .recommendation-page__feedback p {
+    margin: 0 0 25px;
+    color: var(--color-text-secondary);
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  
+  .recommendation-page__secondary-button {
+    width: 100%;
+    min-height: 48px;
+    margin-top: 10px;
+    border: 1px solid var(--color-border);
+    border-radius: 11px;
+    background: #ffffff;
+    color: var(--color-text);
+    font-size: 14px;
+    font-weight: 700;
+  }
+  
+  @media (max-width: 360px) {
+    .recommendation-page__header {
+      padding: 0 18px;
+    }
+  
+    .recommendation-page__progress {
+      padding-left: 18px;
+      padding-right: 18px;
+    }
+  
+    .recommendation-page__content {
+      padding-left: 18px;
+      padding-right: 18px;
+    }
+  
+    .recommendation-page__card {
+      padding: 15px;
+    }
+  }
+  

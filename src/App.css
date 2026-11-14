@@ -1,14 +1,15 @@
-/* 앱 전체 컨테이너 */
+/* 전체 앱 레이아웃 */
 .app-container {
   width: 100%;
   max-width: 430px;
   min-height: 100dvh;
+
   margin: 0 auto;
 
   background-color: var(--color-background);
 }
 
-/* 아직 구현하지 않은 페이지의 임시 화면 */
+/* 임시 메인 화면 */
 .temporary-page {
   display: flex;
   align-items: center;
@@ -16,10 +17,88 @@
 
   width: 100%;
   min-height: 100dvh;
-  padding: 24px;
+
+  padding: 30px 24px;
+
+  background-color: #ffffff;
+  text-align: center;
+}
+
+.temporary-page__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  width: 100%;
+  max-width: 320px;
+}
+
+/* 역할별 아이콘 */
+.temporary-page__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 90px;
+  height: 90px;
+
+  margin-bottom: 22px;
+
+  border-radius: 24px;
+
+  color: var(--color-primary);
+  background-color: #fff2ed;
+}
+
+/* 제목 */
+.temporary-page__title {
+  margin: 0;
 
   color: var(--color-text);
-  font-size: 18px;
+
+  font-size: 23px;
+  font-weight: 800;
+  letter-spacing: -0.7px;
+}
+
+/* 안내 문구 */
+.temporary-page__description {
+  margin: 14px 0 32px;
+
+  color: var(--color-text-secondary);
+
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.7;
+}
+
+/* 로그아웃 버튼 */
+.temporary-page__logout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+
+  width: 100%;
+  height: 50px;
+
+  border: none;
+  border-radius: 11px;
+
+  background-color: var(--color-primary);
+  color: #ffffff;
+
+  font-size: 15px;
   font-weight: 700;
-  text-align: center;
+
+  transition: background-color 0.2s ease;
+}
+
+.temporary-page__logout:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.temporary-page__logout:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
 }

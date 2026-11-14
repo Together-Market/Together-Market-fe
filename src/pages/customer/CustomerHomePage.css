@@ -1,48 +1,67 @@
 
-/* 고객 메인 화면 */
+/* ========================================
+   고객 홈
+======================================== */
+
 .customer-home {
+    --home-primary: #ff795b;
+    --home-primary-dark: #ed6347;
+    --home-text: #282423;
+    --home-muted: #837a77;
+    --home-border: #f0e9e6;
+  
     width: 100%;
     min-height: 100dvh;
-    background-color: #ffffff;
-    color: var(--color-text);
+    padding-bottom: 94px;
+    background: #ffffff;
+    color: var(--home-text);
+    box-sizing: border-box;
+  }
+  
+  .customer-home *,
+  .customer-home *::before,
+  .customer-home *::after {
+    box-sizing: border-box;
   }
   
   /* 상단 헤더 */
+  
   .customer-home__header {
     display: flex;
     align-items: center;
     justify-content: space-between;
   
-    width: 100%;
-    height: 96px;
-    padding: 0 24px;
+    height: 72px;
+    padding: 0 22px;
   
-    background-color: #f3b4b4;
+    background: #ffffff;
+    border-bottom: 1px solid #f6f2f0;
   }
   
-  /* 로고 */
-  .customer-home__logo {
+  .customer-home__brand {
     display: flex;
     align-items: center;
     gap: 7px;
+  
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
   }
   
   .customer-home__logo-symbol {
-    display: block;
-    width: 34px;
-    height: 40px;
+    width: 29px;
+    height: 35px;
     object-fit: contain;
   }
   
   .customer-home__logo-text {
-    display: block;
-    width: 90px;
+    width: 89px;
     height: auto;
     object-fit: contain;
   }
   
-  /* 로그아웃 아이콘 */
-  .customer-home__logout-button {
+  .customer-home__header-action {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -50,294 +69,512 @@
     width: 38px;
     height: 38px;
   
-    border: none;
-    border-radius: 10px;
+    padding: 0;
+    border: 1px solid var(--home-border);
+    border-radius: 13px;
   
-    background: rgba(255, 255, 255, 0.45);
-    color: var(--color-text);
+    background: #ffffff;
+    color: var(--home-text);
+    cursor: pointer;
   }
   
-  .customer-home__logout-button:hover {
-    background: rgba(255, 255, 255, 0.75);
+  /* 본문 */
+  
+  .customer-home__body {
+    padding: 22px 20px 30px;
   }
   
-  /* 콘텐츠 */
-  .customer-home__content {
-    padding: 34px 25px 65px;
-  }
+  /* 메인 배너 */
   
-  /* 소개 영역 */
-  .customer-home__intro {
-    margin-bottom: 30px;
-  }
+  .customer-home__hero {
+    position: relative;
+    overflow: hidden;
   
-  .customer-home__eyebrow {
-    display: inline-block;
+    min-height: 290px;
+    padding: 29px 23px;
   
-    margin-bottom: 14px;
-  
-    color: var(--color-primary);
-    font-size: 13px;
-    font-weight: 700;
-  }
-  
-  .customer-home__title {
-    margin: 0;
-  
-    font-size: 29px;
-    font-weight: 800;
-    line-height: 1.35;
-    letter-spacing: -1.3px;
-  }
-  
-  .customer-home__title span {
-    color: var(--color-primary);
-  }
-  
-  .customer-home__subtitle {
-    margin: 17px 0 0;
-  
-    color: var(--color-text-secondary);
-    font-size: 14px;
-    line-height: 1.75;
-    letter-spacing: -0.3px;
-  }
-  
-  /* AI 추천 카드 */
-  .customer-home__recommend-card {
-    display: flex;
-    flex-direction: column;
-  
-    padding: 25px 22px;
-  
-    border: 1px solid #ffddd5;
-    border-radius: 20px;
-  
+    border-radius: 22px;
     background: linear-gradient(
-      145deg,
-      #fff7f4 0%,
-      #ffe5dd 100%
+      135deg,
+      #fff2ed 0%,
+      #ffe3da 100%
     );
   }
   
-  /* 추천 아이콘 */
-  .customer-home__recommend-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  
-    width: 60px;
-    height: 60px;
-    margin-bottom: 18px;
-  
-    border-radius: 17px;
-  
-    background-color: #ffffff;
-    color: var(--color-primary);
+  .customer-home__hero-content {
+    position: relative;
+    z-index: 1;
   }
   
-  /* 추천 라벨 */
-  .customer-home__recommend-label {
-    display: flex;
+  .customer-home__eyebrow {
+    display: inline-flex;
     align-items: center;
     gap: 6px;
   
-    margin-bottom: 10px;
+    padding: 7px 10px;
   
-    color: var(--color-primary);
-    font-size: 12px;
-    font-weight: 700;
+    border-radius: 20px;
+    background: #ffffffbb;
+  
+    color: #df684e;
+    font-size: 11px;
+    font-weight: 800;
   }
   
-  .customer-home__recommend-text h2 {
+  .customer-home__hero h1 {
+    margin: 16px 0 11px;
+  
+    font-size: 25px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    line-height: 1.35;
+  }
+  
+  .customer-home__hero h1 strong {
+    color: #ee684a;
+    font-weight: 900;
+  }
+  
+  .customer-home__hero p {
+    position: relative;
+    z-index: 1;
+  
     margin: 0;
   
-    color: var(--color-text);
-    font-size: 24px;
-    font-weight: 800;
-    line-height: 1.4;
-    letter-spacing: -0.8px;
+    color: #72635e;
+    font-size: 12px;
+    line-height: 1.7;
   }
   
-  .customer-home__recommend-text p {
-    margin: 13px 0 0;
-  
-    color: #765f59;
-    font-size: 13px;
-    line-height: 1.65;
-  }
-  
-  /* 추천 시작 버튼 */
-  .customer-home__start-button {
-    display: flex;
+  .customer-home__hero-button {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 8px;
   
-    width: 100%;
-    height: 52px;
-    margin-top: 26px;
+    min-height: 43px;
+    margin-top: 21px;
+    padding: 0 17px;
   
     border: none;
     border-radius: 11px;
   
-    background-color: var(--color-primary);
+    background: var(--home-primary);
     color: #ffffff;
   
-    font-size: 15px;
-    font-weight: 700;
-  
-    transition:
-      background-color 0.2s ease,
-      transform 0.2s ease;
-  }
-  
-  .customer-home__start-button:hover {
-    background-color: var(--color-primary-hover);
-  }
-  
-  .customer-home__start-button:active {
-    transform: scale(0.98);
-  }
-  
-  /* 공통 섹션 */
-  .customer-home__section {
-    margin-top: 39px;
-  }
-  
-  .customer-home__section-title {
-    margin: 0 0 19px;
-  
-    color: var(--color-text);
-    font-size: 18px;
+    font-size: 13px;
     font-weight: 800;
-    letter-spacing: -0.5px;
+  
+    cursor: pointer;
   }
   
-  /* 이용 안내 */
-  .customer-home__steps {
+  .customer-home__hero-button:hover {
+    background: var(--home-primary-dark);
+  }
+  
+  /* 배너 장식 */
+  
+  .customer-home__hero-art {
+    position: absolute;
+    right: -8px;
+    bottom: 24px;
+  
+    width: 140px;
+    height: 150px;
+  
+    pointer-events: none;
+  }
+  
+  .customer-home__art-circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    width: 120px;
+    height: 120px;
+  
+    border: 8px solid #ffffff66;
+    border-radius: 50%;
+  
+    background: #ffc5b4;
+    color: #e56a50;
+  
+    transform: rotate(-13deg);
+  }
+  
+  .customer-home__art-heart {
+    position: absolute;
+    top: 5px;
+    right: 15px;
+    color: #fa947c;
+  }
+  
+  .customer-home__art-sparkle {
+    position: absolute;
+    bottom: 0;
+    left: -18px;
+    color: #f29567;
+  }
+  
+  /* 섹션 공통 */
+  
+  .customer-home__section {
+    margin-top: 35px;
+  }
+  
+  .customer-home__section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  
+    margin-bottom: 18px;
+  }
+  
+  .customer-home__section-label {
+    display: block;
+    margin-bottom: 7px;
+  
+    color: var(--home-primary);
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 1px;
+  }
+  
+  .customer-home__section-heading h2 {
+    margin: 0;
+  
+    font-size: 19px;
+    font-weight: 850;
+    letter-spacing: -0.6px;
+  }
+  
+  .customer-home__section-heading p {
+    margin: 8px 0 0;
+  
+    color: var(--home-muted);
+    font-size: 12px;
+    line-height: 1.6;
+  }
+  
+  /* 구매 목적 카드 */
+  
+  .customer-home__category-list {
     display: flex;
     flex-direction: column;
-    gap: 19px;
+    gap: 11px;
+  }
+  
+  .customer-home__category-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  
+    width: 100%;
+    min-height: 89px;
+    padding: 16px;
+  
+    border: 1px solid var(--home-border);
+    border-radius: 16px;
+  
+    background: #ffffff;
+    text-align: left;
+  
+    cursor: pointer;
+  }
+  
+  .customer-home__category-card:hover {
+    border-color: #ffb5a2;
+    background: #fffbf9;
+  }
+  
+  .customer-home__category-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  
+    width: 49px;
+    height: 49px;
+  
+    border-radius: 14px;
+  
+    background: #fff0eb;
+    color: var(--home-primary);
+  }
+  
+  .customer-home__category-card:nth-child(2)
+    .customer-home__category-icon {
+    background: #fff3e2;
+    color: #e39a44;
+  }
+  
+  .customer-home__category-card:nth-child(3)
+    .customer-home__category-icon {
+    background: #eef7ef;
+    color: #5d9877;
+  }
+  
+  .customer-home__category-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 6px;
+  
+    min-width: 0;
+  }
+  
+  .customer-home__category-content strong {
+    font-size: 15px;
+    font-weight: 800;
+  }
+  
+  .customer-home__category-content small {
+    color: var(--home-muted);
+    font-size: 11px;
+    line-height: 1.5;
+  }
+  
+  .customer-home__category-arrow {
+    flex-shrink: 0;
+    color: #b9afaa;
+  }
+  
+  /* 로딩 및 오류 */
+  
+  .customer-home__loading,
+  .customer-home__error,
+  .customer-home__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 13px;
+  
+    min-height: 155px;
+    padding: 22px;
+  
+    border: 1px solid var(--home-border);
+    border-radius: 16px;
+  
+    color: var(--home-muted);
+    font-size: 13px;
+    text-align: center;
+  }
+  
+  .customer-home__spinner {
+    color: var(--home-primary);
+    animation: customer-home-spin 1s linear infinite;
+  }
+  
+  @keyframes customer-home-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .customer-home__error p {
+    margin: 0;
+    line-height: 1.6;
+  }
+  
+  .customer-home__error button {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+  
+    padding: 10px 15px;
+    border: none;
+    border-radius: 10px;
+  
+    background: var(--home-primary);
+    color: #ffffff;
+    font-size: 12px;
+  
+    cursor: pointer;
+  }
+  
+  /* 이용 방법 */
+  
+  .customer-home__how {
+    margin-top: 38px;
+  }
+  
+  .customer-home__steps {
+    padding: 5px 0;
   }
   
   .customer-home__step {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 14px;
+  
+    padding: 12px 3px;
   }
   
   .customer-home__step-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-  
-    width: 48px;
-    height: 48px;
-  
     flex-shrink: 0;
-    border-radius: 14px;
   
-    color: var(--color-primary);
-    background-color: #fff2ed;
-  }
+    width: 45px;
+    height: 45px;
   
-  .customer-home__step > div:last-child {
-    padding-top: 3px;
+    border-radius: 13px;
+    background: #fff2ed;
+    color: var(--home-primary);
   }
   
   .customer-home__step strong {
     display: block;
+    margin-bottom: 6px;
   
-    color: var(--color-text);
-    font-size: 14px;
-    font-weight: 700;
+    font-size: 13px;
+    font-weight: 800;
   }
   
   .customer-home__step p {
-    margin: 7px 0 0;
+    margin: 0;
   
-    color: var(--color-text-secondary);
-    font-size: 12px;
-    line-height: 1.55;
+    color: var(--home-muted);
+    font-size: 11px;
+    line-height: 1.6;
   }
   
-  /* 예약 내역 카드 */
-  .customer-home__reservation-card {
+  /* 예약 내역 배너 */
+  
+  .customer-home__reservation-banner {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 13px;
   
     width: 100%;
-    min-height: 95px;
-    padding: 18px 15px;
+    margin-top: 31px;
+    padding: 19px 15px;
   
-    border: 1px solid var(--color-border);
+    border: 1px solid #ffe2d5;
     border-radius: 16px;
   
-    background-color: #ffffff;
+    background: #fff8f4;
     text-align: left;
-  }
   
-  .customer-home__reservation-card:hover {
-    border-color: var(--color-primary);
+    cursor: pointer;
   }
   
   .customer-home__reservation-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-  
-    width: 48px;
-    height: 48px;
     flex-shrink: 0;
   
-    border-radius: 12px;
-    background-color: #fff2ed;
-    color: var(--color-primary);
+    width: 45px;
+    height: 45px;
+  
+    border-radius: 13px;
+    background: #ffe5dc;
+    color: var(--home-primary);
   }
   
-  .customer-home__reservation-text {
+  .customer-home__reservation-banner > span:nth-child(2) {
     display: flex;
     flex: 1;
     flex-direction: column;
-    gap: 7px;
-  
-    min-width: 0;
+    gap: 6px;
   }
   
-  .customer-home__reservation-text strong {
-    font-size: 14px;
+  .customer-home__reservation-banner strong {
+    color: var(--home-text);
+    font-size: 13px;
+  }
+  
+  .customer-home__reservation-banner small {
+    color: var(--home-muted);
+    font-size: 11px;
+  }
+  
+  .customer-home__reservation-banner > svg {
+    color: var(--home-primary);
+  }
+  
+  /* 하단 내비게이션 */
+  
+  .customer-home__bottom-nav {
+    position: sticky;
+    bottom: 0;
+    z-index: 30;
+  
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  
+    width: 100%;
+    min-height: 68px;
+  
+    margin-top: 14px;
+    padding-bottom: env(safe-area-inset-bottom);
+  
+    border-top: 1px solid #eee8e4;
+    background: #ffffff;
+  }
+  
+  .customer-home__nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  
+    min-height: 68px;
+    padding: 8px 0;
+  
+    border: none;
+    background: transparent;
+  
+    color: #aaa19e;
+    font-size: 10px;
     font-weight: 700;
+  
+    cursor: pointer;
   }
   
-  .customer-home__reservation-text span {
-    color: var(--color-text-secondary);
-    font-size: 12px;
-    line-height: 1.5;
+  .customer-home__nav-item--active {
+    color: var(--home-primary);
   }
   
-  .customer-home__chevron {
-    flex-shrink: 0;
-    color: var(--color-primary);
-  }
+  /* 반응형 */
   
-  /* 작은 모바일 화면 */
   @media (max-width: 360px) {
     .customer-home__header {
-      padding: 0 18px;
+      padding: 0 16px;
     }
   
-    .customer-home__content {
-      padding: 28px 18px 55px;
+    .customer-home__body {
+      padding: 18px 15px 25px;
     }
   
-    .customer-home__title {
-      font-size: 26px;
+    .customer-home__hero {
+      padding: 25px 19px;
     }
   
-    .customer-home__recommend-card {
-      padding: 22px 18px;
+    .customer-home__hero h1 {
+      font-size: 23px;
+    }
+  
+    .customer-home__hero-art {
+      right: -35px;
+      opacity: 0.65;
+    }
+  
+    .customer-home__section-heading h2 {
+      font-size: 18px;
     }
   }
   
+  .customer-home__bottom-nav {
+    position: fixed;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 430px;
+    margin-top: 0;
+  }

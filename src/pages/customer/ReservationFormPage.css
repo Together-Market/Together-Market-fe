@@ -1,0 +1,636 @@
+
+/* ==========================================
+   예약 신청 페이지
+========================================== */
+
+.reservation-form {
+    width: 100%;
+    min-height: 100dvh;
+    background: #ffffff;
+    color: var(--color-text, #282423);
+    box-sizing: border-box;
+  }
+  
+  .reservation-form *,
+  .reservation-form *::before,
+  .reservation-form *::after {
+    box-sizing: border-box;
+  }
+  
+  /* ==========================================
+     헤더
+  ========================================== */
+  
+  .reservation-form__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 76px;
+    padding: 0 22px;
+    background: #f3b4b4;
+  }
+  
+  .reservation-form__back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--color-text, #282423);
+    cursor: pointer;
+  }
+  
+  .reservation-form__back:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .reservation-form__logo {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  
+  .reservation-form__logo-symbol {
+    width: 30px;
+    height: 36px;
+    object-fit: contain;
+  }
+  
+  .reservation-form__logo-text {
+    width: 88px;
+    height: auto;
+    object-fit: contain;
+  }
+  
+  .reservation-form__header-spacer {
+    width: 36px;
+  }
+  
+  /* ==========================================
+     본문
+  ========================================== */
+  
+  .reservation-form__content {
+    padding: 30px 24px 35px;
+  }
+  
+  .reservation-form__intro {
+    margin-bottom: 32px;
+  }
+  
+  .reservation-form__intro > span {
+    display: block;
+    margin-bottom: 12px;
+    color: var(--color-primary, #ff795b);
+    font-size: 13px;
+    font-weight: 700;
+  }
+  
+  .reservation-form__intro h1 {
+    margin: 0;
+    font-size: 25px;
+    font-weight: 800;
+    letter-spacing: -0.8px;
+  }
+  
+  .reservation-form__intro p {
+    margin: 13px 0 0;
+    color: var(
+      --color-text-secondary,
+      #837a77
+    );
+    font-size: 13px;
+    line-height: 1.8;
+  }
+  
+  /* ==========================================
+     예약 상품
+  ========================================== */
+  
+  .reservation-form__section {
+    margin-bottom: 32px;
+  }
+  
+  .reservation-form__section h2 {
+    margin: 0 0 16px;
+    font-size: 18px;
+    font-weight: 800;
+  }
+  
+  .reservation-form__summary {
+    padding: 18px;
+    border: 1px solid #ededed;
+    border-radius: 17px;
+  }
+  
+  .reservation-form__summary-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 0;
+  }
+  
+  .reservation-form__summary-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: #fff2ed;
+    color: var(--color-primary, #ff795b);
+  }
+  
+  .reservation-form__summary-info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+  }
+  
+  .reservation-form__summary-info strong {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+  
+  .reservation-form__summary-info span {
+    color: var(
+      --color-text-secondary,
+      #837a77
+    );
+    font-size: 12px;
+  }
+  
+  .reservation-form__item-price {
+    flex-shrink: 0;
+    font-size: 13px;
+  }
+  
+  .reservation-form__total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 14px;
+    padding-top: 18px;
+    border-top: 1px solid #eeeeee;
+  }
+  
+  .reservation-form__total > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    color: var(
+      --color-text-secondary,
+      #837a77
+    );
+    font-size: 13px;
+  }
+  
+  .reservation-form__total > span svg {
+    display: block;
+    flex-shrink: 0;
+  }
+  
+  .reservation-form__total strong {
+    color: var(--color-primary, #ff795b);
+    font-size: 20px;
+    font-weight: 800;
+  }
+  
+  /* ==========================================
+     입력 영역
+  ========================================== */
+  
+  .reservation-form__fieldset {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0;
+    margin: 0 0 33px;
+    padding: 0;
+    border: none;
+  }
+  
+  .reservation-form__fieldset legend {
+    margin-bottom: 18px;
+    padding: 0;
+    font-size: 18px;
+    font-weight: 800;
+  }
+  
+  .reservation-form__fieldset:disabled {
+    opacity: 0.7;
+  }
+  
+  .reservation-form__field {
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+    min-width: 0;
+    width: 100%;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  
+  /* 아이콘과 텍스트를 하나의 Flex 행으로 정렬 */
+  .reservation-form__field-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 22px;
+    line-height: 1.5;
+  }
+  
+  /* Lucide 아이콘의 위치와 크기 고정 */
+  .reservation-form__field-label svg {
+    display: block;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    color: var(--color-primary, #ff795b);
+    stroke-width: 2;
+  }
+  
+  .reservation-form__field input,
+  .reservation-form__field textarea {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    padding: 14px;
+    border: 1px solid var(
+      --color-border,
+      #e5e5e5
+    );
+    border-radius: 11px;
+    outline: none;
+    background: #ffffff;
+    color: var(--color-text, #282423);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 400;
+  }
+  
+  .reservation-form__field input {
+    min-height: 52px;
+  }
+  
+  .reservation-form__field textarea {
+    min-height: 105px;
+    resize: vertical;
+    line-height: 1.6;
+  }
+  
+  .reservation-form__field input:focus,
+  .reservation-form__field textarea:focus {
+    border-color: var(--color-primary, #ff795b);
+  }
+  
+  .reservation-form__field input::placeholder,
+  .reservation-form__field textarea::placeholder {
+    color: #aaaaaa;
+  }
+  
+  .reservation-form__field input:disabled,
+  .reservation-form__field textarea:disabled {
+    background: #f7f7f7;
+    cursor: not-allowed;
+  }
+  
+  /* ==========================================
+     연락처 오류 / 성공 안내
+  ========================================== */
+  
+  .reservation-form__field input[aria-invalid="true"] {
+    border-color: #dc4d42;
+    background: #fffafa;
+  }
+  
+  .reservation-form__field input[aria-invalid="true"]:focus {
+    border-color: #dc4d42;
+    box-shadow: 0 0 0 2px
+      rgb(220 77 66 / 10%);
+  }
+  
+  .reservation-form__phone-error {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    color: #dc4d42;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+  
+  .reservation-form__phone-error svg {
+    display: block;
+    flex-shrink: 0;
+    width: 15px;
+    height: 15px;
+  }
+  
+  .reservation-form__phone-success {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    color: #25845b;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+  
+  .reservation-form__phone-success svg {
+    display: block;
+    flex-shrink: 0;
+    width: 15px;
+    height: 15px;
+  }
+  
+  /* ==========================================
+     수령시간 입력 영역
+  ========================================== */
+  
+  .reservation-form__section-desc {
+    margin: -5px 0 2px;
+    color: var(
+      --color-text-secondary,
+      #837a77
+    );
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.7;
+  }
+  
+  .reservation-form__pickup-card {
+    display: flex;
+    flex-direction: column;
+    gap: 19px;
+    padding: 19px;
+    border: 1px solid #eeeeee;
+    border-radius: 17px;
+    background: #ffffff;
+  }
+  
+  .reservation-form__pickup-title {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+  }
+  
+  .reservation-form__pickup-title > span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 9px;
+    border-radius: 8px;
+    background: #fff1eb;
+    color: var(--color-primary, #ff795b);
+    font-size: 11px;
+    font-weight: 800;
+  }
+  
+  .reservation-form__pickup-title strong {
+    font-size: 15px;
+    font-weight: 800;
+  }
+  
+  /* 주소, 준비시간: 아이콘과 텍스트 정렬 */
+  .reservation-form__address,
+  .reservation-form__preparation {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    color: var(
+      --color-text-secondary,
+      #837a77
+    );
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.7;
+  }
+  
+  .reservation-form__address svg,
+  .reservation-form__preparation svg {
+    display: block;
+    width: 17px;
+    height: 17px;
+    flex-shrink: 0;
+    color: var(--color-primary, #ff795b);
+  }
+  
+  .reservation-form__address > span,
+  .reservation-form__preparation > span {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  /* ==========================================
+     예산
+  ========================================== */
+  
+  .reservation-form__budget-note {
+    margin: 0 0 20px;
+    color: var(
+      --color-text-secondary,
+      #837a77
+    );
+    font-size: 12px;
+    line-height: 1.6;
+  }
+  
+  /* ==========================================
+     안내 박스
+  ========================================== */
+  
+  .reservation-form__notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    padding: 15px;
+    border-radius: 12px;
+    background: #fff6f2;
+  }
+  
+  .reservation-form__notice > svg {
+    display: block;
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: var(--color-primary, #ff795b);
+  }
+  
+  .reservation-form__notice p {
+    margin: 0;
+    color: #765f59;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+  
+  /* ==========================================
+     API / 폼 오류
+  ========================================== */
+  
+  .reservation-form__error {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 17px 0 0;
+    padding: 13px;
+    border-radius: 10px;
+    background: #fff0ed;
+    color: #d94b40;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  
+  .reservation-form__error svg {
+    display: block;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  
+  .reservation-form__error span {
+    flex: 1;
+  }
+  
+  /* ==========================================
+     하단 예약 버튼
+  ========================================== */
+  
+  .reservation-form__footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+    padding: 14px 24px
+      max(20px, env(safe-area-inset-bottom));
+    border-top: 1px solid #eeeeee;
+    background: #ffffff;
+  }
+  
+  .reservation-form__footer button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 54px;
+    border: none;
+    border-radius: 12px;
+    background: var(--color-primary, #ff795b);
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  
+  .reservation-form__footer button:hover:not(:disabled) {
+    background: var(
+      --color-primary-hover,
+      #ed6347
+    );
+  }
+  
+  .reservation-form__footer button:disabled {
+    background: #dddddd;
+    color: #999999;
+    cursor: not-allowed;
+  }
+  
+  .reservation-form__footer button svg {
+    display: block;
+    flex-shrink: 0;
+  }
+  
+  .reservation-form__footer-notice {
+    margin: 10px 0 0;
+    color: #999999;
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 1.6;
+    text-align: center;
+  }
+  
+  /* ==========================================
+     로딩 / 데이터 조회 오류
+  ========================================== */
+  
+  .reservation-form__feedback {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    min-height: 60dvh;
+    padding: 24px;
+    color: var(
+      --color-text-secondary,
+      #837a77
+    );
+    font-size: 14px;
+    line-height: 1.6;
+    text-align: center;
+  }
+  
+  .reservation-form__feedback > svg {
+    color: var(--color-primary, #ff795b);
+  }
+  
+  .reservation-form__feedback p {
+    margin: 0;
+  }
+  
+  .reservation-form__feedback button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 17px;
+    border: none;
+    border-radius: 10px;
+    background: var(--color-primary, #ff795b);
+    color: #ffffff;
+    font-family: inherit;
+    cursor: pointer;
+  }
+  
+  /* ==========================================
+     작은 모바일 화면
+  ========================================== */
+  
+  @media (max-width: 360px) {
+    .reservation-form__header {
+      padding: 0 18px;
+    }
+  
+    .reservation-form__content {
+      padding: 25px 18px 30px;
+    }
+  
+    .reservation-form__footer {
+      padding-left: 18px;
+      padding-right: 18px;
+    }
+  
+    .reservation-form__summary,
+    .reservation-form__pickup-card {
+      padding: 14px;
+    }
+  
+    .reservation-form__intro h1 {
+      font-size: 23px;
+    }
+  
+    .reservation-form__field-label {
+      gap: 9px;
+    }
+  }
+  

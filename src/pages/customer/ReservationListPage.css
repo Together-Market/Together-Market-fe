@@ -1,0 +1,292 @@
+
+.reservation-list {
+    --reservation-primary: #bb4d32;
+    --reservation-text: #252525;
+    --reservation-muted: #858585;
+    --reservation-border: #eaeaea;
+    --reservation-soft: #fff0ea;
+  
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 100dvh;
+    background: #fff;
+    color: var(--reservation-text);
+    box-sizing: border-box;
+  }
+  
+  .reservation-list *,
+  .reservation-list *::before,
+  .reservation-list *::after {
+    box-sizing: border-box;
+  }
+  
+  .reservation-list button {
+    font-family: inherit;
+    cursor: pointer;
+  }
+  
+  .reservation-list__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 65px;
+    padding: 0 23px;
+    border-bottom: 1px solid #f5f5f5;
+  }
+  
+  .reservation-list__brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--reservation-primary);
+    font-size: 15px;
+    font-weight: 800;
+  }
+  
+  .reservation-list__brand svg {
+    flex-shrink: 0;
+  }
+  
+  .reservation-list__refresh {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--reservation-text);
+  }
+  
+  .reservation-list__content {
+    flex: 1;
+    padding: 27px 24px 45px;
+  }
+  
+  .reservation-list__content > h1 {
+    margin: 0 0 20px;
+    font-size: 21px;
+    font-weight: 800;
+  }
+  
+  .reservation-list__cards {
+    display: flex;
+    flex-direction: column;
+    gap: 19px;
+  }
+  
+  .reservation-list__card {
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--reservation-border);
+  }
+  
+  .reservation-list__status {
+    display: flex;
+    align-items: center;
+    min-height: 33px;
+    margin-bottom: 14px;
+    padding: 7px 12px;
+    border-radius: 7px;
+    background: var(--reservation-soft);
+    color: var(--reservation-primary);
+    font-size: 11px;
+    font-weight: 800;
+  }
+  
+  .reservation-list__status.confirmed {
+    background: #eaf7ef;
+    color: #278052;
+  }
+  
+  .reservation-list__status.failed {
+    background: #fff0ea;
+    color: #c44935;
+  }
+  
+  .reservation-list__product-title {
+    margin: 0 0 9px;
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.6;
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+  }
+  
+  .reservation-list__pickup,
+  .reservation-list__hint {
+    margin: 0 0 10px;
+    color: var(--reservation-muted);
+    font-size: 11px;
+    line-height: 1.7;
+  }
+  
+  .reservation-list__detail-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 40px;
+    margin-top: 12px;
+    padding: 10px 14px;
+    border: 0;
+    border-radius: 8px;
+    background: var(--reservation-soft);
+    color: var(--reservation-primary);
+    font-size: 12px;
+    font-weight: 800;
+  }
+  
+  .reservation-list__detail-button svg {
+    flex-shrink: 0;
+  }
+  
+  /* 스켈레톤 */
+  
+  .reservation-list__skeleton-list {
+    display: flex;
+    flex-direction: column;
+    gap: 17px;
+  }
+  
+  .reservation-list__skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    height: 125px;
+    padding: 18px;
+    border-radius: 9px;
+    background: #f7f8f9;
+  }
+  
+  .reservation-list__skeleton span {
+    display: block;
+    height: 12px;
+    border-radius: 3px;
+    background: #e2e5e7;
+  }
+  
+  .reservation-list__skeleton span:first-child {
+    width: 38%;
+  }
+  
+  .reservation-list__skeleton span:nth-child(2) {
+    width: 88%;
+  }
+  
+  .reservation-list__skeleton span:nth-child(3) {
+    width: 65%;
+  }
+  
+  .reservation-list__skeleton-list > p {
+    color: var(--reservation-muted);
+    text-align: center;
+    font-size: 12px;
+  }
+  
+  /* 빈 결과·오류 */
+  
+  .reservation-list__feedback {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 53dvh;
+    text-align: center;
+    color: var(--reservation-primary);
+  }
+  
+  .reservation-list__feedback h2 {
+    margin: 20px 0 10px;
+    color: var(--reservation-text);
+    font-size: 19px;
+    font-weight: 800;
+  }
+  
+  .reservation-list__feedback p {
+    margin: 0 0 22px;
+    color: var(--reservation-muted);
+    font-size: 12px;
+    line-height: 1.8;
+  }
+  
+  .reservation-list__feedback button,
+  .reservation-list__more {
+    width: 100%;
+    min-height: 48px;
+    border: 0;
+    border-radius: 9px;
+    background: var(--reservation-primary);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 800;
+  }
+  
+  .reservation-list__more {
+    margin-top: 20px;
+  }
+  
+  .reservation-list__page-error {
+    padding: 12px;
+    border-radius: 8px;
+    background: var(--reservation-soft);
+    color: #bd4b32;
+    font-size: 12px;
+  }
+  
+  /* 하단 네비게이션 */
+  
+  .reservation-list__bottom-nav {
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    width: 100%;
+    margin-top: auto;
+    padding: 12px 5px
+      max(13px, env(safe-area-inset-bottom));
+    border-top: 1px solid #ededed;
+    background: #fff;
+  }
+  
+  .reservation-list__bottom-nav button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 42px;
+    border: 0;
+    background: transparent;
+    color: #888;
+    font-size: 10px;
+    font-weight: 600;
+  }
+  
+  .reservation-list__bottom-nav button.is-active {
+    color: var(--reservation-primary);
+  }
+  
+  .reservation-list__bottom-nav button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+  
+  .reservation-list button:focus-visible {
+    outline: 2px solid var(--reservation-primary);
+    outline-offset: 3px;
+  }
+  
+  @media (max-width: 360px) {
+    .reservation-list__header {
+      padding: 0 18px;
+    }
+  
+    .reservation-list__content {
+      padding: 24px 18px 35px;
+    }
+  }
+  

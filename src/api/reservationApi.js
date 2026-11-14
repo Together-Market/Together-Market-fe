@@ -7,11 +7,14 @@ import {
   mockGetReservations,
 } from "../mocks/reservationMock";
 
+import {
+    mockGetReservationAlternatives,
+} from "../mocks/reservationMock";
+
 // ==========================================
-// 공통 유틸리티
+// 공통 검증
 // ==========================================
 
-// 예약 ID가 올바르게 전달되었는지 확인
 function validateId(id, name) {
   if (
     id === null ||
@@ -24,7 +27,6 @@ function validateId(id, name) {
   return encodeURIComponent(String(id));
 }
 
-// 페이지네이션 값 검증
 function validatePagination(page, size) {
   const currentPage = Number(page);
   const pageSize = Number(size);
@@ -63,14 +65,16 @@ export async function createReservation(
   payload,
   idempotencyKey
 ) {
-  // 요청 데이터 확인
-  if (!payload || typeof payload !== "object") {
+  if (
+    !payload ||
+    typeof payload !== "object" ||
+    Array.isArray(payload)
+  ) {
     throw new Error(
       "예약 신청 데이터가 올바르지 않습니다."
     );
   }
 
-  // 동일 예약 요청의 중복 처리를 방지하는 키
   if (
     typeof idempotencyKey !== "string" ||
     !idempotencyKey.trim()
@@ -80,7 +84,6 @@ export async function createReservation(
     );
   }
 
-  // Mock 모드
   if (isMockMode) {
     return mockCreateReservation(
       payload,
@@ -88,7 +91,6 @@ export async function createReservation(
     );
   }
 
-  // 실제 API 모드
   return apiRequest("/reservations", {
     method: "POST",
     headers: {
@@ -99,7 +101,7 @@ export async function createReservation(
 }
 
 // ==========================================
-// RES-02: 고객 예약 목록 조회
+// RES-02: 내 통합 예약 목록
 // GET /reservations
 // ==========================================
 
@@ -113,7 +115,6 @@ export async function getReservations({
     size
   );
 
-  // Mock 모드
   if (isMockMode) {
     return mockGetReservations({
       page: pagination.page,
@@ -122,13 +123,11 @@ export async function getReservations({
     });
   }
 
-  // 실제 API 모드
   const params = new URLSearchParams({
     page: String(pagination.page),
     size: String(pagination.size),
   });
 
-  // 예약 상태 필터가 있는 경우에만 추가
   if (status) {
     params.set("status", String(status));
   }
@@ -139,23 +138,55 @@ export async function getReservations({
 }
 
 // ==========================================
-// RES-03: 고객 예약 상세 조회
+// RES-03: 내 통합 예약 상세
 // GET /reservations/{reservation_id}
 // ==========================================
 
-export async function getReservation(reservationId) {
+export async function getReservation(
+  reservationId
+) {
   const encodedId = validateId(
     reservationId,
     "예약 번호"
   );
 
-  // Mock 모드
   if (isMockMode) {
     return mockGetReservation(reservationId);
   }
 
-  // 실제 API 모드
   return apiRequest(
     `/reservations/${encodedId}`
   );
 }
+
+
+// ==========================================
+// RES-04: 실패 예약의 대체 추천 후보
+// ==========================================
+
+export async function getReservationAlternatives(
+    reservationId
+  ) {
+    if (
+      reservationId === null ||
+      reservationId === undefined ||
+      String(reservationId).trim() === ""
+    ) {
+      throw new Error("예약 번호가 없습니다.");
+    }
+  
+    // Mock 모드
+    if (isMockMode) {
+      return mockGetReservationAlternatives(
+        reservationId
+      );
+    }
+  
+    // 실제 API 모드
+    return apiRequest(
+      `/reservations/${encodeURIComponent(
+        String(reservationId)
+      )}/alternatives`
+    );
+  }
+  

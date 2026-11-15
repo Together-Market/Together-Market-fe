@@ -264,10 +264,9 @@ function StoresMap({ stores = [] }) {
     }
   
     // 두 점포의 위치가 동일한지 확인
-    const isSameLocation =
-        storeA.latitude === storeB.latitude &&
-        storeA.longitude === storeB.longitude;
-  
+    const isSameLocation = areStoresAtSameLocation(stores);
+    
+    // 지도 재생성에 사용할 key
     const mapKey = stores
       .map(
         (store) =>
@@ -1115,17 +1114,24 @@ function RecommendationDetailPage() {
                         <span>두 점포 간 직선거리</span>
 
                         <strong>
-                          {formatDistance(
-                            locations.distance_meters
-                          )}
+                            {areStoresAtSameLocation(locations.stores)
+                                ? "같은 위치 · 0m"
+                                : formatDistance(locations.distance_meters)}
                         </strong>
                       </div>
 
-                      <p className="detail-page__map-note">
-                        지도에 표시된 연결선은
-                        직선 기준이에요. 실제 이동
-                        경로나 도보시간을 의미하지 않아요.
-                      </p>
+                      {areStoresAtSameLocation(locations.stores) ? (
+                        <p className="detail-page__map-note">
+                            두 점포가 동일한 위치에 있어요.
+                            지도에서는 하나의 마커로 표시됩니다.
+                            실제 매장 위치는 방문 전 확인해 주세요.
+                        </p>
+                      ) : (
+                        <p className="detail-page__map-note">
+                            지도에 표시된 연결선은 직선 기준이에요.
+                            실제 이동 경로나 도보시간을 의미하지 않아요.
+                        </p>
+                      )}
 
                       <div className="detail-page__map-stores">
                         {locations.stores.map(

@@ -77,10 +77,13 @@ function getStatusClass(status) {
   switch (status) {
     case "ON_SALE":
       return "is-selling";
+
     case "SOLD_OUT":
       return "is-soldout";
+
     case "PAUSED":
       return "is-paused";
+
     default:
       return "is-unknown";
   }
@@ -99,14 +102,22 @@ function formatPrice(value) {
 }
 
 // ==========================================
-// API 목록 응답 정규화
+// 데모 상품 설명 표시 처리
 // ==========================================
 
-// Mock과 실제 API 계층에서 반환하는
-// 배열 또는 { items: [...] } 구조를 지원한다.
-//
-// 예상하지 못한 응답을 빈 배열로 숨기지 않고
-// 오류를 발생시켜 잘못된 저장을 방지한다.
+// 데모 안내 문구가 들어 있는 상품만
+// 상품 목록에서 설명 영역을 숨긴다.
+// API 응답이나 DB에 저장된 원본은 수정하지 않는다.
+
+function shouldHideDemoDescription(description) {
+  const text = String(description ?? "").trim();
+
+  return text.startsWith("[DEMO_CATALOG_V1]");
+}
+
+// ==========================================
+// API 목록 응답 정규화
+// ==========================================
 
 function extractItems(data, label) {
   if (Array.isArray(data)) {
@@ -125,15 +136,6 @@ function extractItems(data, label) {
 // ==========================================
 // 구매 목적 카테고리
 // ==========================================
-
-// 기본적으로 PUR-01의 대분류·중분류 트리를
-// 처리한다.
-//
-// 중분류만 상품 태그로 선택할 수 있도록
-// children이 있는 부모 노드는 제외한다.
-//
-// 대분류에 children이 빈 배열로 제공된 경우
-// 이를 중분류로 오인하지 않는다.
 
 function extractPurposeCategories(data) {
   const roots = extractItems(
@@ -173,21 +175,16 @@ function extractPurposeCategories(data) {
         continue;
       }
 
-      // children 필드가 없는 평면 목록은
-      // 개별 카테고리로 취급한다.
       if (!Array.isArray(item.children)) {
         addCategory(item);
         continue;
       }
 
-      // 명시된 하위 카테고리가 있는 경우
       if (item.children.length > 0) {
         walk(item.children, depth + 1);
         continue;
       }
 
-      // 하위 항목이 없는 대분류는 제외한다.
-      // 하위 단계의 잎 노드만 추가한다.
       if (depth > 0) {
         addCategory(item);
       }
@@ -375,6 +372,7 @@ function SaleStatusBadge({ status }) {
         className="owner-product__status-dot"
         aria-hidden="true"
       />
+
       {getStatusLabel(status)}
     </span>
   );
@@ -386,8 +384,10 @@ function SaleStatusBadge({ status }) {
 
 function ProductDescription({ description }) {
   const [expanded, setExpanded] = useState(false);
+
   const [isOverflowing, setIsOverflowing] =
     useState(false);
+
   const [textElement, setTextElement] =
     useState(null);
 
@@ -401,8 +401,6 @@ function ProductDescription({ description }) {
     }
 
     function checkOverflow() {
-      if (!textElement) return;
-
       const style = window.getComputedStyle(
         textElement
       );
@@ -492,6 +490,12 @@ function ProductCard({
   onEdit,
   onStatus,
 }) {
+  // 데모 안내 설명인지 확인
+  const hideDescription =
+    shouldHideDemoDescription(
+      product.description
+    );
+
   return (
     <article className="owner-product__card">
       <div className="owner-product__product-row">
@@ -520,9 +524,12 @@ function ProductCard({
         </div>
       </div>
 
-      <ProductDescription
-        description={product.description}
-      />
+      {/* 데모 상품의 설명 박스만 숨긴다 */}
+      {!hideDescription && (
+        <ProductDescription
+          description={product.description}
+        />
+      )}
 
       <div className="owner-product__status-row">
         <span className="owner-product__status-title">
@@ -562,10 +569,16 @@ function ProductCard({
 function OwnerProductPage() {
   const navigate = useNavigate();
 
+  // ==========================================
+  // 점포 / 상품 / 카테고리 데이터
+  // ==========================================
+
   const [stores, setStores] = useState([]);
+
   const [storeId, setStoreId] = useState("");
 
   const [products, setProducts] = useState([]);
+
   const [categories, setCategories] = useState([]);
 
   // list / create / edit / status / success
@@ -585,6 +598,10 @@ function OwnerProductPage() {
   const [completedAction, setCompletedAction] =
     useState("");
 
+  // ==========================================
+  // 요청 상태
+  // ==========================================
+
   const [loadingBase, setLoadingBase] =
     useState(true);
 
@@ -594,12 +611,14 @@ function OwnerProductPage() {
   const [saving, setSaving] = useState(false);
 
   const [error, setError] = useState("");
+
   const [formError, setFormError] = useState("");
 
   const [fieldErrors, setFieldErrors] =
     useState({});
 
   const [reloadKey, setReloadKey] = useState(0);
+
   const [baseReloadKey, setBaseReloadKey] =
     useState(0);
 
@@ -625,13 +644,11 @@ function OwnerProductPage() {
 
         if (!active) return;
 
-        // 점포 응답 구조 정규화
         const ownerStores = extractItems(
           ownerStoresResult,
           "점포 목록"
         );
 
-        // 카테고리 응답 구조 정규화
         const purposeCategories =
           extractPurposeCategories(
             purposeCategoriesResult
@@ -640,7 +657,6 @@ function OwnerProductPage() {
         setStores(ownerStores);
         setCategories(purposeCategories);
 
-        // 현재 선택된 점포 유지
         setStoreId((previous) => {
           const exists = ownerStores.some(
             (store) =>
@@ -674,7 +690,7 @@ function OwnerProductPage() {
   }, [baseReloadKey]);
 
   // ==========================================
-  // 선택한 점포 상품 목록 조회
+  // 선택한 점포의 상품 조회
   // ==========================================
 
   useEffect(() => {
@@ -724,6 +740,10 @@ function OwnerProductPage() {
     };
   }, [storeId, reloadKey]);
 
+  // ==========================================
+  // 파생 데이터
+  // ==========================================
+
   const loading =
     loadingBase || loadingProducts;
 
@@ -733,7 +753,7 @@ function OwnerProductPage() {
   );
 
   // ==========================================
-  // 화면 전환
+  // 상품 등록 화면
   // ==========================================
 
   function openCreate() {
@@ -745,12 +765,19 @@ function OwnerProductPage() {
     setSelectedProduct(null);
     setFieldErrors({});
     setFormError("");
+
     setView("create");
   }
+
+  // ==========================================
+  // 상품 수정 화면
+  // ==========================================
 
   function openEdit(product) {
     setSelectedProduct(product);
 
+    // 수정 화면에는 원본 설명을 유지한다.
+    // 데모 안내 문구를 임의로 지우지 않는다.
     setForm({
       name: product.name ?? "",
 
@@ -780,8 +807,13 @@ function OwnerProductPage() {
 
     setFieldErrors({});
     setFormError("");
+
     setView("edit");
   }
+
+  // ==========================================
+  // 판매 상태 변경 화면
+  // ==========================================
 
   function openStatus(product) {
     setSelectedProduct(product);
@@ -794,6 +826,10 @@ function OwnerProductPage() {
     setView("status");
   }
 
+  // ==========================================
+  // 상품 목록으로 돌아가기
+  // ==========================================
+
   function goToList() {
     if (saving) return;
 
@@ -801,6 +837,10 @@ function OwnerProductPage() {
     setFormError("");
     setFieldErrors({});
   }
+
+  // ==========================================
+  // 뒤로가기
+  // ==========================================
 
   function handleBack() {
     if (saving) return;
@@ -829,6 +869,10 @@ function OwnerProductPage() {
 
     setFormError("");
   }
+
+  // ==========================================
+  // 구매 목적 태그 선택
+  // ==========================================
 
   function toggleCategory(categoryId) {
     const id = String(categoryId);
@@ -1029,12 +1073,10 @@ function OwnerProductPage() {
   function handleRetry() {
     setError("");
 
-    // 점포 및 카테고리를 다시 조회한다.
     setBaseReloadKey(
       (value) => value + 1
     );
 
-    // 선택한 점포의 상품도 다시 조회한다.
     setReloadKey(
       (value) => value + 1
     );
@@ -1058,7 +1100,9 @@ function OwnerProductPage() {
 
   return (
     <main className="owner-product">
-      {/* 상단 헤더 */}
+      {/* ======================================
+          상단 헤더
+      ====================================== */}
 
       <header className="owner-product__header">
         <button
@@ -1076,7 +1120,9 @@ function OwnerProductPage() {
         <span className="owner-product__header-spacer" />
       </header>
 
-      {/* 로딩 */}
+      {/* ======================================
+          로딩
+      ====================================== */}
 
       {loading && view === "list" && (
         <div
@@ -1084,13 +1130,16 @@ function OwnerProductPage() {
           role="status"
         >
           <div className="owner-product__skeleton" />
+
           <div className="owner-product__skeleton" />
 
           <p>상품 정보를 불러오는 중...</p>
         </div>
       )}
 
-      {/* API 오류 */}
+      {/* ======================================
+          API 오류
+      ====================================== */}
 
       {!loading && error && view === "list" && (
         <section
@@ -1116,9 +1165,9 @@ function OwnerProductPage() {
         </section>
       )}
 
-      {/* ==================================
+      {/* ======================================
           상품 목록
-      ================================== */}
+      ====================================== */}
 
       {view === "list" &&
         !loading &&
@@ -1265,9 +1314,9 @@ function OwnerProductPage() {
           </div>
         )}
 
-      {/* ==================================
+      {/* ======================================
           상품 등록 / 수정
-      ================================== */}
+      ====================================== */}
 
       {(view === "create" ||
         view === "edit") && (
@@ -1470,9 +1519,9 @@ function OwnerProductPage() {
         </form>
       )}
 
-      {/* ==================================
+      {/* ======================================
           판매 상태 변경
-      ================================== */}
+      ====================================== */}
 
       {view === "status" &&
         selectedProduct && (
@@ -1599,9 +1648,9 @@ function OwnerProductPage() {
           </div>
         )}
 
-      {/* ==================================
+      {/* ======================================
           저장 완료
-      ================================== */}
+      ====================================== */}
 
       {view === "success" && (
         <div className="owner-product__layout">

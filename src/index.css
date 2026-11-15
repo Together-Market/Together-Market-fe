@@ -10,14 +10,29 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 
-  --color-primary: #FF795B;
-  --color-primary-hover: #f2684d;
+  /* ==========================================
+     Together Market 브랜드 컬러
+  ========================================== */
+
+  --color-primary: #FF6854;
+  --color-primary-hover: #E85644;
+  --color-primary-active: #D94D3B;
+
+  /* 텍스트 컬러 */
   --color-text: #231815;
   --color-text-secondary: #666666;
+
+  /* 테두리 및 배경 */
   --color-border: #e5e5e5;
   --color-background: #ffffff;
+
+  /* 오류 상태 */
   --color-error: #e34c4c;
 }
+
+/* ==========================================
+   공통 레이아웃
+========================================== */
 
 * {
   box-sizing: border-box;
@@ -35,6 +50,10 @@ body {
   min-width: 320px;
 }
 
+/* ==========================================
+   입력 및 버튼 기본 스타일
+========================================== */
+
 button,
 input,
 textarea,
@@ -49,6 +68,10 @@ button {
 button:disabled {
   cursor: not-allowed;
 }
+
+/* ==========================================
+   링크
+========================================== */
 
 a {
   color: inherit;

@@ -6,14 +6,9 @@ import {
   AlertCircle,
   ArrowLeft,
   ArrowRight,
-  CalendarDays,
-  CheckCircle2,
-  Clock3,
   MapPin,
   Package,
   RefreshCw,
-  Sparkles,
-  Store,
 } from "lucide-react";
 
 import {
@@ -39,10 +34,25 @@ import "./RecommendationDetailPage.css";
 // ==========================================
 
 const WEEKDAYS = [
-  "월", "화", "수", "목", "금", "토", "일",
+  "월",
+  "화",
+  "수",
+  "목",
+  "금",
+  "토",
+  "일",
 ];
 
-const formatPrice = (amount) => {
+// 원화 표시
+function formatPrice(amount) {
+  if (
+    amount === null ||
+    amount === undefined ||
+    amount === ""
+  ) {
+    return "-";
+  }
+
   const number = Number(amount);
 
   if (!Number.isFinite(number)) {
@@ -50,14 +60,27 @@ const formatPrice = (amount) => {
   }
 
   return `${number.toLocaleString("ko-KR")}원`;
-};
+}
 
+// 시간 표시
 function formatTime(value) {
-  if (!value) return "-";
+  if (!value) {
+    return "-";
+  }
+
   return String(value).slice(0, 5);
 }
 
+// 거리 표시
 function formatDistance(value) {
+  if (
+    value === null ||
+    value === undefined ||
+    value === ""
+  ) {
+    return "거리 정보 없음";
+  }
+
   const meters = Number(value);
 
   if (!Number.isFinite(meters) || meters < 0) {
@@ -71,52 +94,116 @@ function formatDistance(value) {
   return `${Math.round(meters)}m`;
 }
 
-// 지도 좌표를 숫자로 변환
+// ==========================================
+// 지도 좌표 관련 유틸리티
+// ==========================================
+
+// 위도와 경도를 숫자로 변환
 function parseCoordinate(value) {
-    if (
-      value === null ||
-      value === undefined ||
-      value === ""
-    ) {
-      return NaN;
-    }
-  
-    const number = Number(value);
-  
-    return Number.isFinite(number) ? number : NaN;
+  if (
+    value === null ||
+    value === undefined ||
+    value === ""
+  ) {
+    return NaN;
+  }
+
+  const number = Number(value);
+
+  return Number.isFinite(number)
+    ? number
+    : NaN;
 }
+
+// 올바른 지도 좌표인지 확인
+function isValidCoordinate(latitude, longitude) {
+  return (
+    Number.isFinite(latitude) &&
+    Number.isFinite(longitude) &&
+    latitude >= -90 &&
+    latitude <= 90 &&
+    longitude >= -180 &&
+    longitude <= 180
+  );
+}
+
+// 두 점포가 동일한 좌표인지 확인
+function areStoresAtSameLocation(stores) {
+  if (!Array.isArray(stores) || stores.length !== 2) {
+    return false;
+  }
+
+  const [storeA, storeB] = stores;
+
+  const latitudeA = parseCoordinate(
+    storeA.latitude
+  );
+
+  const longitudeA = parseCoordinate(
+    storeA.longitude
+  );
+
+  const latitudeB = parseCoordinate(
+    storeB.latitude
+  );
+
+  const longitudeB = parseCoordinate(
+    storeB.longitude
+  );
+
+  // 좌표가 유효하지 않으면 같은 위치로 판단하지 않음
+  if (
+    !isValidCoordinate(latitudeA, longitudeA) ||
+    !isValidCoordinate(latitudeB, longitudeB)
+  ) {
+    return false;
+  }
+
+  return (
+    latitudeA === latitudeB &&
+    longitudeA === longitudeB
+  );
+}
+
+// ==========================================
+// 상품 판매 상태
+// ==========================================
 
 function getSaleStatus(status) {
   switch (status) {
     case "ON_SALE":
       return "판매 중";
+
     case "SOLD_OUT":
       return "품절";
+
     case "PAUSED":
       return "판매 중지";
+
     default:
       return "판매 상태 확인 필요";
   }
 }
 
+// 예약 불가 사유
 function getUnavailableReason(reason) {
-  // 서버가 사유를 문장으로 제공한다면 우선 표시
+  if (typeof reason === "string") {
+    return reason;
+  }
+
   if (reason?.message) {
     return reason.message;
   }
 
-  const code = reason?.code;
-
-  if (!code) {
-    return "예약 가능 여부를 확인할 수 없습니다.";
+  if (reason?.code) {
+    return `예약 불가 사유: ${reason.code}`;
   }
 
-  // 알려지지 않은 코드를 임의로 해석하지 않음
-  return `예약 불가 사유: ${code}`;
+  return "예약 가능 여부를 확인할 수 없습니다.";
 }
 
 // ==========================================
-// 상품 이미지
+// 상품 이미지 컴포넌트
 // ==========================================
 
 function ProductImage({
@@ -125,16 +212,18 @@ function ProductImage({
 }) {
   const [failed, setFailed] = useState(false);
 
+  const imageUrl = product?.image_url;
+
   useEffect(() => {
     setFailed(false);
-  }, [product?.image_url]);
+  }, [imageUrl]);
 
-  if (product?.image_url && !failed) {
+  if (imageUrl && !failed) {
     return (
       <img
         className={`detail-page__product-image ${className}`}
-        src={product.image_url}
-        alt={product.name ?? "상품 이미지"}
+        src={imageUrl}
+        alt={product?.name ?? "상품 이미지"}
         onError={() => setFailed(true)}
       />
     );
@@ -146,7 +235,10 @@ function ProductImage({
       role="img"
       aria-label="상품 이미지 없음"
     >
-      <Package size={31} strokeWidth={1.5} />
+      <Package
+        size={31}
+        strokeWidth={1.5}
+      />
 
       <span>이미지 준비 중</span>
     </div>
@@ -154,7 +246,7 @@ function ProductImage({
 }
 
 // ==========================================
-// 점포 운영시간
+// 점포 운영시간 컴포넌트
 // ==========================================
 
 function StoreHours({ hours = [] }) {
@@ -164,10 +256,12 @@ function StoreHours({ hours = [] }) {
       ? hours.items
       : [];
 
+  // 영업시간
   const businessHours = normalizedHours.filter(
     (hour) => hour.hour_type === "BUSINESS"
   );
 
+  // 상품 수령 가능시간
   const pickupHours = normalizedHours.filter(
     (hour) => hour.hour_type === "PICKUP"
   );
@@ -184,7 +278,8 @@ function StoreHours({ hours = [] }) {
     return items.map((item, index) => {
       const dayLabel = item.target_date
         ? item.target_date
-        : item.weekday >= 1 && item.weekday <= 7
+        : item.weekday >= 1 &&
+            item.weekday <= 7
           ? `${WEEKDAYS[item.weekday - 1]}요일`
           : "요일 미지정";
 
@@ -204,6 +299,7 @@ function StoreHours({ hours = [] }) {
           key={`${dayLabel}-${index}`}
         >
           <span>{dayLabel}</span>
+
           <strong>{timeLabel}</strong>
         </div>
       );
@@ -212,214 +308,265 @@ function StoreHours({ hours = [] }) {
 
   return (
     <div className="detail-page__hours">
+      {/* 영업시간 */}
+
       <section className="detail-page__hours-group">
         <h3>영업시간</h3>
+
         {renderHours(businessHours)}
       </section>
 
+      {/* 상품 수령 가능시간 */}
+
       <section className="detail-page__hours-group">
         <h3>상품 수령 가능시간</h3>
+
         {renderHours(pickupHours)}
       </section>
 
       <p className="detail-page__hours-note">
         특정 날짜의 운영시간이 등록되어 있다면
         해당 날짜의 일정이 우선 적용돼요.
-        실제 예약 가능 여부는 신청 시 서버에서
-        최종 확인합니다.
+        실제 예약 가능 여부는 신청 시
+        서버에서 최종 확인합니다.
       </p>
     </div>
   );
 }
 
 // ==========================================
-// 두 점포 지도
+// 두 점포 지도 컴포넌트
 // ==========================================
 
 function StoresMap({ stores = [] }) {
-    const points = stores.map((store) => [
-      parseCoordinate(store.latitude),
-      parseCoordinate(store.longitude),
-    ]);
-  
-    const isValid =
-      stores.length === 2 &&
-      points.every(
-        ([latitude, longitude]) =>
-          Number.isFinite(latitude) &&
-          Number.isFinite(longitude) &&
-          latitude >= -90 &&
-          latitude <= 90 &&
-          longitude >= -180 &&
-          longitude <= 180
-      );
-  
-    if (!isValid) {
-      return (
-        <div className="detail-page__map-unavailable">
-          <MapPin size={24} />
-          <p>지도를 표시할 수 없습니다.</p>
-        </div>
-      );
-    }
-  
-    // 두 점포의 위치가 동일한지 확인
-    const isSameLocation = areStoresAtSameLocation(stores);
-    
-    // 지도 재생성에 사용할 key
-    const mapKey = stores
-      .map(
-        (store) =>
-          `${store.id}-${store.latitude}-${store.longitude}`
-      )
-      .join("-");
-  
+  // 서버에서 받은 위도와 경도를 숫자로 변환
+  const points = stores.map((store) => [
+    parseCoordinate(store.latitude),
+    parseCoordinate(store.longitude),
+  ]);
+
+  // 두 점포 모두 유효한 좌표를 가지고 있는지 확인
+  const isValid =
+    stores.length === 2 &&
+    points.every(([latitude, longitude]) =>
+      isValidCoordinate(latitude, longitude)
+    );
+
+  // 위치 정보가 유효하지 않으면 지도 대신 안내 표시
+  if (!isValid) {
     return (
-      <MapContainer
-        key={mapKey}
-        center={isSameLocation ? points[0] : undefined}
-        zoom={isSameLocation ? 16 : undefined}
-        bounds={isSameLocation ? undefined : points}
-        boundsOptions={
-          isSameLocation
-            ? undefined
-            : {
-                padding: [40, 40],
-                maxZoom: 16,
-              }
-        }
-        scrollWheelZoom={false}
-        className="detail-page__map"
-      >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-  
-        {isSameLocation ? (
-          // 동일 좌표인 경우 하나의 통합 마커
-          <CircleMarker
-            center={points[0]}
-            radius={17}
-            pathOptions={{
-              color: "#ffffff",
-              weight: 4,
-              fillColor: "#A6533B",
-              fillOpacity: 1,
-            }}
-          >
-            <Popup>
+      <div className="detail-page__map-unavailable">
+        <MapPin size={24} />
+
+        <p>지도를 표시할 수 없습니다.</p>
+      </div>
+    );
+  }
+
+  // 두 점포가 같은 좌표인지 확인
+  const isSameLocation =
+    areStoresAtSameLocation(stores);
+
+  // 점포 또는 좌표가 변경되면 지도를 새로 생성
+  const mapKey = stores
+    .map(
+      (store) =>
+        `${store.id}-${store.latitude}-${store.longitude}`
+    )
+    .join("-");
+
+  return (
+    <MapContainer
+      key={mapKey}
+      center={
+        isSameLocation
+          ? points[0]
+          : undefined
+      }
+      zoom={
+        isSameLocation
+          ? 16
+          : undefined
+      }
+      bounds={
+        isSameLocation
+          ? undefined
+          : points
+      }
+      boundsOptions={
+        isSameLocation
+          ? undefined
+          : {
+              padding: [40, 40],
+              maxZoom: 16,
+            }
+      }
+      scrollWheelZoom={false}
+      className="detail-page__map"
+    >
+      {/* OpenStreetMap 지도 */}
+
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+
+      {isSameLocation ? (
+        // ======================================
+        // 두 점포가 동일한 위치일 때
+        // ======================================
+
+        <CircleMarker
+          center={points[0]}
+          radius={17}
+          pathOptions={{
+            color: "#FFFFFF",
+            weight: 4,
+            fillColor: "#A6533B",
+            fillOpacity: 1,
+          }}
+        >
+          <Popup>
+            <div
+              style={{
+                minWidth: 190,
+                lineHeight: 1.6,
+              }}
+            >
+              <strong>
+                같은 위치의 두 점포
+              </strong>
+
               <div
                 style={{
-                  minWidth: 190,
-                  lineHeight: 1.6,
+                  marginTop: 10,
                 }}
               >
-                <strong>같은 위치의 두 점포</strong>
-  
-                <div style={{ marginTop: 10 }}>
-                  <strong>A. {stores[0].name}</strong>
-                </div>
-  
-                <div>
-                  <strong>B. {stores[1].name}</strong>
-                </div>
-  
-                <div
-                  style={{
-                    marginTop: 8,
-                    fontSize: 12,
-                    color: "#777777",
-                  }}
-                >
-                  {stores[0].address}
-                </div>
+                <strong>
+                  A. {stores[0].name}
+                </strong>
               </div>
-            </Popup>
-          </CircleMarker>
-        ) : (
-          <>
-            {/* 두 점포를 연결하는 직선 */}
-  
-            <Polyline
-              positions={points}
-              pathOptions={{
-                color: "#BB4D32",
-                weight: 3,
-                dashArray: "6 6",
-              }}
-            />
-  
-            {/* 서로 다른 위치의 점포 마커 */}
-  
-            {stores.map((store, index) => (
-              <CircleMarker
-                key={store.id}
-                center={points[index]}
-                radius={11}
-                pathOptions={{
-                  color: "#ffffff",
-                  weight: 3,
-                  fillColor:
-                    index === 0
-                      ? "#BB4D32"
-                      : "#333333",
-                  fillOpacity: 1,
+
+              <div>
+                <strong>
+                  B. {stores[1].name}
+                </strong>
+              </div>
+
+              <div
+                style={{
+                  marginTop: 8,
+                  fontSize: 12,
+                  color: "#777777",
                 }}
               >
-                <Popup>
-                  <strong>
-                    점포 {index === 0 ? "A" : "B"}
-                  </strong>
-  
-                  <div>{store.name}</div>
-                  <div>{store.address}</div>
-                </Popup>
-              </CircleMarker>
-            ))}
-          </>
-        )}
-      </MapContainer>
-    );
-  }  
+                {stores[0].address}
+              </div>
+            </div>
+          </Popup>
+        </CircleMarker>
+      ) : (
+        // ======================================
+        // 두 점포가 서로 다른 위치일 때
+        // ======================================
+
+        <>
+          {/* 점포 사이 직선 연결 */}
+
+          <Polyline
+            positions={points}
+            pathOptions={{
+              color: "#BB4D32",
+              weight: 3,
+              dashArray: "6 6",
+            }}
+          />
+
+          {/* 점포 A, B 마커 */}
+
+          {stores.map((store, index) => (
+            <CircleMarker
+              key={store.id}
+              center={points[index]}
+              radius={11}
+              pathOptions={{
+                color: "#FFFFFF",
+                weight: 3,
+                fillColor:
+                  index === 0
+                    ? "#BB4D32"
+                    : "#333333",
+                fillOpacity: 1,
+              }}
+            >
+              <Popup>
+                <strong>
+                  점포 {index === 0 ? "A" : "B"}
+                </strong>
+
+                <div>{store.name}</div>
+
+                <div>{store.address}</div>
+              </Popup>
+            </CircleMarker>
+          ))}
+        </>
+      )}
+    </MapContainer>
+  );
+}
 
 // ==========================================
-// 추천 상세 페이지
+// 추천 조합 상세 페이지
 // ==========================================
 
 function RecommendationDetailPage() {
   const navigate = useNavigate();
+
   const { candidateId } = useParams();
 
   // ==========================================
-  // API 데이터
+  // API 데이터 상태
   // ==========================================
 
   const [detail, setDetail] = useState(null);
+
   const [locations, setLocations] = useState(null);
+
   const [storeDetails, setStoreDetails] = useState({});
 
+  // ==========================================
+  // API 요청 상태
+  // ==========================================
+
   const [loading, setLoading] = useState(true);
+
   const [error, setError] = useState("");
+
   const [locationError, setLocationError] =
     useState("");
+
   const [retryKey, setRetryKey] = useState(0);
 
   // ==========================================
-  // 화면 전환 상태
+  // 화면 상태
   //
-  // summary: 추천 조합
-  // product: 상품 상세
-  // store: 점포 정보
-  // map: 두 점포 위치
+  // summary : 추천 조합 상세
+  // product : 개별 상품 상세
+  // store   : 점포 정보
+  // map     : 두 점포 위치
   // ==========================================
 
   const [view, setView] = useState("summary");
+
+  const [previousView, setPreviousView] =
+    useState("summary");
+
   const [selectedIndex, setSelectedIndex] =
     useState(0);
 
   // ==========================================
-  // 추천 정보 조회
+  // 추천 상세 정보 조회
   // ==========================================
 
   useEffect(() => {
@@ -427,15 +574,26 @@ function RecommendationDetailPage() {
 
     async function loadDetail() {
       setLoading(true);
+
       setError("");
+
       setLocationError("");
 
       setDetail(null);
+
       setLocations(null);
+
       setStoreDetails({});
 
+      // 추천 후보가 변경되면 화면 초기화
+      setView("summary");
+
+      setPreviousView("summary");
+
+      setSelectedIndex(0);
+
       try {
-        // REC-02 추천 상세
+        // REC-02 추천 상세 조회
         const candidate =
           await getRecommendationDetail(candidateId);
 
@@ -448,13 +606,17 @@ function RecommendationDetailPage() {
           );
         }
 
-        if (!active) return;
+        if (!active) {
+          return;
+        }
 
         setDetail(candidate);
 
-        // 위치 조회와 점포 상세 조회는 독립적으로 처리
+        // REC-03 점포 위치 조회
+        // STO-01 각 점포 상세 조회
         const results = await Promise.allSettled([
           getRecommendationLocations(candidateId),
+
           ...candidate.items.map((item) =>
             getStoreDetail(
               item.store.id,
@@ -463,36 +625,43 @@ function RecommendationDetailPage() {
           ),
         ]);
 
-        if (!active) return;
+        if (!active) {
+          return;
+        }
 
         // 점포 위치 조회 결과
         if (results[0].status === "fulfilled") {
           setLocations(results[0].value);
         } else {
+          setLocations(null);
+
           setLocationError(
             results[0].reason?.message ??
               "점포 위치를 불러오지 못했습니다."
           );
         }
 
-        // 점포별 상세 정보
+        // 점포 상세 조회 결과
         const nextStoreDetails = {};
 
         candidate.items.forEach((item, index) => {
           const result = results[index + 1];
 
           if (result?.status === "fulfilled") {
-            nextStoreDetails[String(item.store.id)] =
-              result.value;
+            nextStoreDetails[
+              String(item.store.id)
+            ] = result.value;
           }
         });
 
         setStoreDetails(nextStoreDetails);
       } catch (err) {
-        if (!active) return;
+        if (!active) {
+          return;
+        }
 
         setError(
-          err.message ??
+          err?.message ??
             "추천 조합을 불러오지 못했습니다."
         );
       } finally {
@@ -502,7 +671,13 @@ function RecommendationDetailPage() {
       }
     }
 
-    loadDetail();
+    if (candidateId) {
+      loadDetail();
+    } else {
+      setLoading(false);
+
+      setError("추천 조합 번호가 없습니다.");
+    }
 
     return () => {
       active = false;
@@ -513,73 +688,112 @@ function RecommendationDetailPage() {
   // 파생 데이터
   // ==========================================
 
+  // 예약 신청 가능 여부
   const available =
     detail?.availability_status === "AVAILABLE";
 
+  // 추천 조합에 포함된 상품
   const items = detail?.items ?? [];
 
+  // 현재 선택된 상품
   const selectedItem = items[selectedIndex];
 
+  // 현재 선택된 점포
   const selectedStore = selectedItem
     ? {
         ...selectedItem.store,
+
         ...(storeDetails[
           String(selectedItem.store.id)
         ] ?? {}),
       }
     : null;
 
+  // ==========================================
+  // 점포 운영시간
+  // ==========================================
+
   const currentHours = selectedItem
-    ? detail?.store_hours?.find(
-        (entry) =>
-          String(entry.store_id) ===
-          String(selectedItem.store.id)
-      )?.items ??
-      selectedStore?.hours ??
-      []
+    ? (
+        detail?.store_hours?.find(
+          (entry) =>
+            String(entry.store_id) ===
+            String(selectedItem.store.id)
+        )?.items ??
+        selectedStore?.hours?.items ??
+        selectedStore?.hours ??
+        []
+      )
     : [];
 
-  const unavailableReasons =
-    detail?.unavailable_reasons ?? [];
+  // 예약 불가 사유
+  const unavailableReasons = Array.isArray(
+    detail?.unavailable_reasons
+  )
+    ? detail.unavailable_reasons
+    : [];
 
   // ==========================================
   // 화면 이동
   // ==========================================
 
   function openView(nextView, index = 0) {
+    setPreviousView(view);
+
     setSelectedIndex(index);
+
     setView(nextView);
-    window.scrollTo({
-      top: 0,
-      behavior: "instant",
-    });
+
+    window.scrollTo(0, 0);
   }
+
+  // ==========================================
+  // 추천 목록으로 이동
+  // ==========================================
 
   function goToRecommendations() {
     if (detail?.purchase_request_id) {
       navigate(
         `/customer/recommendations/${detail.purchase_request_id}`
       );
+
       return;
     }
 
     navigate("/customer");
   }
 
+  // ==========================================
+  // 뒤로가기
+  // ==========================================
+
   function handleBack() {
     if (view === "summary") {
       goToRecommendations();
+
       return;
     }
 
     if (view === "store") {
-      // 상품 화면에서 점포 정보를 열었다면 상품으로 복귀
-      openView("product", selectedIndex);
+      setView(
+        previousView === "product"
+          ? "product"
+          : "summary"
+      );
+
+      window.scrollTo(0, 0);
+
       return;
     }
 
-    openView("summary");
+    setView("summary");
+
+    window.scrollTo(0, 0);
   }
+
+  // ==========================================
+  // 예약 신청 페이지 이동
+  // ==========================================
 
   function handleReservation() {
     if (!detail || !available) {
@@ -592,16 +806,14 @@ function RecommendationDetailPage() {
   }
 
   // ==========================================
-  // 화면별 제목
+  // 화면별 헤더 제목
   // ==========================================
 
   let headerTitle = "추천 조합";
 
-  if (view === "product") {
+  if (view === "product" && selectedItem) {
     headerTitle =
-      selectedIndex === 0
-        ? "꽃다발 상세"
-        : "상품 상세";
+      `${selectedItem.product.name} 상세`;
   }
 
   if (view === "store") {
@@ -612,13 +824,8 @@ function RecommendationDetailPage() {
     headerTitle = "두 점포 위치";
   }
 
-  // 실제 상품에 맞춰 상세 제목 사용
-  if (view === "product" && selectedItem) {
-    headerTitle = `${selectedItem.product.name} 상세`;
-  }
-
   // ==========================================
-  // 화면
+  // 페이지 화면
   // ==========================================
 
   return (
@@ -645,7 +852,7 @@ function RecommendationDetailPage() {
       </header>
 
       {/* ======================================
-          로딩
+          로딩 화면
       ====================================== */}
 
       {loading && (
@@ -654,6 +861,7 @@ function RecommendationDetailPage() {
           role="status"
         >
           <div className="detail-page__skeleton" />
+
           <div className="detail-page__skeleton" />
 
           <p>
@@ -663,7 +871,7 @@ function RecommendationDetailPage() {
       )}
 
       {/* ======================================
-          조회 오류
+          API 조회 오류
       ====================================== */}
 
       {!loading && error && (
@@ -686,24 +894,27 @@ function RecommendationDetailPage() {
             }
           >
             <RefreshCw size={17} />
+
             다시 시도
           </button>
         </div>
       )}
 
       {/* ======================================
-          추천 조합 조회 성공
+          추천 상세 조회 성공
       ====================================== */}
 
       {!loading && !error && detail && (
         <>
           {/* ==================================
-              추천 조합 상세
+              추천 조합 상세 화면
           ================================== */}
 
           {view === "summary" && (
             <>
               <div className="detail-page__content">
+                {/* 추천 조합 제목 */}
+
                 <section className="detail-page__intro">
                   <span className="detail-page__eyebrow">
                     AI 추천 {detail.rank}순위
@@ -711,13 +922,16 @@ function RecommendationDetailPage() {
 
                   <h2>
                     {items
-                      .map((item) => item.product.name)
+                      .map(
+                        (item) =>
+                          item.product.name
+                      )
                       .join(" + ")}
                   </h2>
 
                   <p>
-                    서로 다른 두 가게에서
-                    준비하는 추천 조합이에요.
+                    서로 다른 두 가게에서 준비하는
+                    추천 조합이에요.
                   </p>
                 </section>
 
@@ -727,12 +941,14 @@ function RecommendationDetailPage() {
                   <div className="detail-page__products">
                     {items.map((item, index) => {
                       const priceChanged =
+                        item.unit_price_snapshot != null &&
+                        item.current_unit_price != null &&
                         Number(
                           item.unit_price_snapshot
                         ) !==
-                        Number(
-                          item.current_unit_price
-                        );
+                          Number(
+                            item.current_unit_price
+                          );
 
                       return (
                         <article
@@ -776,10 +992,14 @@ function RecommendationDetailPage() {
                               type="button"
                               className="detail-page__text-link"
                               onClick={() =>
-                                openView("product", index)
+                                openView(
+                                  "product",
+                                  index
+                                )
                               }
                             >
                               상품 상세
+
                               <ArrowRight size={14} />
                             </button>
                           </div>
@@ -789,10 +1009,12 @@ function RecommendationDetailPage() {
                   </div>
                 </section>
 
-                {/* 총금액 */}
+                {/* 상품 총금액 */}
 
                 <div className="detail-page__total">
-                  <span>상품 합계</span>
+                  <span>
+                    상품 합계
+                  </span>
 
                   <strong>
                     {formatPrice(
@@ -801,20 +1023,25 @@ function RecommendationDetailPage() {
                   </strong>
                 </div>
 
-                {/* 예약 가능 상태 */}
+                {/* 예약 불가능 안내 */}
 
                 {!available && (
                   <div className="detail-page__unavailable">
                     <div className="detail-page__status-title">
                       <AlertCircle size={17} />
+
                       현재 예약할 수 없는 조합이에요.
                     </div>
 
                     {unavailableReasons.length > 0 ? (
                       unavailableReasons.map(
                         (reason, index) => (
-                          <p key={index}>
-                            {getUnavailableReason(reason)}
+                          <p
+                            key={`reason-${index}`}
+                          >
+                            {getUnavailableReason(
+                              reason
+                            )}
                           </p>
                         )
                       )
@@ -830,7 +1057,9 @@ function RecommendationDetailPage() {
                 {/* AI 추천 이유 */}
 
                 <section className="detail-page__section">
-                  <h3>추천 이유</h3>
+                  <h3>
+                    추천 이유
+                  </h3>
 
                   <p className="detail-page__reason">
                     {detail.recommendation_reason ||
@@ -838,10 +1067,12 @@ function RecommendationDetailPage() {
                   </p>
                 </section>
 
-                {/* 두 점포 수령 정보 */}
+                {/* 두 점포 정보 */}
 
                 <section className="detail-page__section">
-                  <h3>두 점포 정보</h3>
+                  <h3>
+                    두 점포 정보
+                  </h3>
 
                   <div className="detail-page__store-summary">
                     {items.map((item, index) => (
@@ -864,8 +1095,10 @@ function RecommendationDetailPage() {
 
                           <small>
                             준비시간 약{" "}
-                            {item.product
-                              .preparation_minutes}
+                            {
+                              item.product
+                                .preparation_minutes
+                            }
                             분
                           </small>
                         </div>
@@ -873,7 +1106,10 @@ function RecommendationDetailPage() {
                         <button
                           type="button"
                           onClick={() =>
-                            openView("store", index)
+                            openView(
+                              "store",
+                              index
+                            )
                           }
                         >
                           정보
@@ -885,14 +1121,17 @@ function RecommendationDetailPage() {
                   <button
                     type="button"
                     className="detail-page__secondary-button"
-                    onClick={() => openView("map")}
+                    onClick={() =>
+                      openView("map")
+                    }
                   >
                     <MapPin size={17} />
+
                     두 점포 위치 확인
                   </button>
                 </section>
 
-                {/* 다른 추천 */}
+                {/* 다른 추천 조합 */}
 
                 <button
                   type="button"
@@ -900,29 +1139,34 @@ function RecommendationDetailPage() {
                   onClick={goToRecommendations}
                 >
                   다른 추천 조합 보기
+
                   <ArrowRight size={16} />
                 </button>
               </div>
 
-            <footer className="detail-page__footer">
+              {/* 통합 예약 버튼 */}
+
+              <footer className="detail-page__footer">
                 <button
-                    type="button"
-                    className="detail-page__primary-button"
-                    onClick={handleReservation}
-                    disabled={!available}
+                  type="button"
+                  className="detail-page__primary-button"
+                  onClick={handleReservation}
+                  disabled={!available}
                 >
-                    {available
+                  {available
                     ? "예약 정보 입력"
                     : "현재 예약할 수 없는 조합입니다"}
 
-                    {available && <ArrowRight size={18} />}
+                  {available && (
+                    <ArrowRight size={18} />
+                  )}
                 </button>
-            </footer>
+              </footer>
             </>
           )}
 
           {/* ==================================
-              개별 상품 상세
+              개별 상품 상세 화면
           ================================== */}
 
           {view === "product" &&
@@ -930,7 +1174,9 @@ function RecommendationDetailPage() {
               <>
                 <div className="detail-page__content">
                   <ProductImage
-                    product={selectedItem.product}
+                    product={
+                      selectedItem.product
+                    }
                     className="detail-page__hero-image"
                   />
 
@@ -954,9 +1200,12 @@ function RecommendationDetailPage() {
                         "등록된 상품 설명이 없습니다."}
                     </p>
 
+                    {/* 상품 상세 정보 */}
+
                     <dl className="detail-page__specs">
                       <div>
                         <dt>수량</dt>
+
                         <dd>
                           {selectedItem.quantity}개
                         </dd>
@@ -964,16 +1213,20 @@ function RecommendationDetailPage() {
 
                       <div>
                         <dt>상품 준비시간</dt>
+
                         <dd>
                           약{" "}
-                          {selectedItem.product
-                            .preparation_minutes}
+                          {
+                            selectedItem.product
+                              .preparation_minutes
+                          }
                           분
                         </dd>
                       </div>
 
                       <div>
                         <dt>판매 상태</dt>
+
                         <dd>
                           {getSaleStatus(
                             selectedItem.product.sale_status
@@ -982,7 +1235,10 @@ function RecommendationDetailPage() {
                       </div>
 
                       <div>
-                        <dt>현재 상품 합계</dt>
+                        <dt>
+                          현재 상품 합계
+                        </dt>
+
                         <dd>
                           {formatPrice(
                             Number(
@@ -996,6 +1252,8 @@ function RecommendationDetailPage() {
                       </div>
                     </dl>
 
+                    {/* 판매 점포 정보 */}
+
                     <button
                       type="button"
                       className="detail-page__secondary-button"
@@ -1007,6 +1265,7 @@ function RecommendationDetailPage() {
                       }
                     >
                       판매 점포 정보
+
                       <ArrowRight size={17} />
                     </button>
                   </section>
@@ -1027,7 +1286,7 @@ function RecommendationDetailPage() {
             )}
 
           {/* ==================================
-              점포 상세
+              점포 상세 화면
           ================================== */}
 
           {view === "store" &&
@@ -1039,9 +1298,12 @@ function RecommendationDetailPage() {
                       {selectedStore.name}
                     </h2>
 
+                    {/* 점포 기본 정보 */}
+
                     <dl className="detail-page__store-facts">
                       <div>
                         <dt>업종</dt>
+
                         <dd>
                           {selectedStore.business_type ||
                             "-"}
@@ -1050,6 +1312,7 @@ function RecommendationDetailPage() {
 
                       <div>
                         <dt>주소</dt>
+
                         <dd>
                           {selectedStore.address ||
                             "-"}
@@ -1058,6 +1321,7 @@ function RecommendationDetailPage() {
 
                       <div>
                         <dt>연락처</dt>
+
                         <dd>
                           {selectedStore.phone ||
                             "-"}
@@ -1065,17 +1329,24 @@ function RecommendationDetailPage() {
                       </div>
                     </dl>
 
+                    {/* 영업시간 및 수령 가능시간 */}
+
                     <StoreHours
                       hours={currentHours}
                     />
                   </section>
 
+                  {/* 지도 화면으로 이동 */}
+
                   <button
                     type="button"
                     className="detail-page__secondary-button"
-                    onClick={() => openView("map")}
+                    onClick={() =>
+                      openView("map")
+                    }
                   >
                     <MapPin size={17} />
+
                     두 점포 위치 보기
                   </button>
                 </div>
@@ -1085,58 +1356,88 @@ function RecommendationDetailPage() {
                     type="button"
                     className="detail-page__primary-button"
                     onClick={() =>
-                      openView("product", selectedIndex)
+                      openView(
+                        previousView === "product"
+                          ? "product"
+                          : "summary",
+                        selectedIndex
+                      )
                     }
                   >
-                    상품 상세로 돌아가기
+                    이전 화면으로 돌아가기
                   </button>
                 </footer>
               </>
             )}
 
           {/* ==================================
-              두 점포 위치
+              두 점포 위치 화면
           ================================== */}
 
           {view === "map" && (
             <>
               <div className="detail-page__content">
                 <section className="detail-page__map-section">
-                  <h2>두 점포의 위치</h2>
+                  <h2>
+                    두 점포의 위치
+                  </h2>
 
                   {locations?.stores?.length === 2 ? (
                     <>
+                      {/* 지도 */}
+
                       <StoresMap
-                        stores={locations.stores}
+                        stores={
+                          locations.stores
+                        }
                       />
 
+                      {/* 직선거리 */}
+
                       <div className="detail-page__distance-info">
-                        <span>두 점포 간 직선거리</span>
+                        <span>
+                          두 점포 간 직선거리
+                        </span>
 
                         <strong>
-                            {areStoresAtSameLocation(locations.stores)
-                                ? "같은 위치 · 0m"
-                                : formatDistance(locations.distance_meters)}
+                          {areStoresAtSameLocation(
+                            locations.stores
+                          )
+                            ? "같은 위치 · 0m"
+                            : formatDistance(
+                                locations.distance_meters
+                              )}
                         </strong>
                       </div>
 
-                      {areStoresAtSameLocation(locations.stores) ? (
+                      {/* 지도 안내 문구 */}
+
+                      {areStoresAtSameLocation(
+                        locations.stores
+                      ) ? (
                         <p className="detail-page__map-note">
-                            두 점포가 동일한 위치에 있어요.
-                            지도에서는 하나의 마커로 표시됩니다.
-                            실제 매장 위치는 방문 전 확인해 주세요.
+                          두 점포가 동일한 위치에 있어요.
+                          지도에서는 하나의 마커로
+                          표시됩니다. 실제 매장 위치는
+                          방문 전 확인해 주세요.
                         </p>
                       ) : (
                         <p className="detail-page__map-note">
-                            지도에 표시된 연결선은 직선 기준이에요.
-                            실제 이동 경로나 도보시간을 의미하지 않아요.
+                          지도에 표시된 연결선은
+                          직선 기준이에요.
+                          실제 이동 경로나 도보시간을
+                          의미하지 않아요.
                         </p>
                       )}
+
+                      {/* 각 점포 주소 */}
 
                       <div className="detail-page__map-stores">
                         {locations.stores.map(
                           (store, index) => (
-                            <div key={store.id}>
+                            <div
+                              key={store.id}
+                            >
                               <span className="detail-page__store-marker">
                                 {index === 0
                                   ? "A"
@@ -1173,16 +1474,22 @@ function RecommendationDetailPage() {
                 </section>
               </div>
 
+              {/* 예약 정보 입력 */}
+
               <footer className="detail-page__footer">
                 <button
                   type="button"
                   className="detail-page__primary-button"
-                  onClick={() =>
-                    openView("summary")
-                  }
+                  onClick={handleReservation}
+                  disabled={!available}
                 >
-                  예약 정보 입력
-                  <ArrowRight size={18} />
+                  {available
+                    ? "예약 정보 입력"
+                    : "현재 예약할 수 없는 조합입니다"}
+
+                  {available && (
+                    <ArrowRight size={18} />
+                  )}
                 </button>
               </footer>
             </>

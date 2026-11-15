@@ -476,7 +476,7 @@ function StoresMap({ stores = [] }) {
           <Polyline
             positions={points}
             pathOptions={{
-              color: "#BB4D32",
+              color: "#FF6854",
               weight: 3,
               dashArray: "6 6",
             }}
@@ -494,7 +494,7 @@ function StoresMap({ stores = [] }) {
                 weight: 3,
                 fillColor:
                   index === 0
-                    ? "#BB4D32"
+                    ? "#FF6854"
                     : "#333333",
                 fillOpacity: 1,
               }}

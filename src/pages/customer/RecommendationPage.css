@@ -4,7 +4,7 @@
 ========================================== */
 
 .recommendation-page {
-    --recommendation-primary: #bb4d32;
+    --recommendation-primary: #FF6854;
     --recommendation-primary-hover: #a6422c;
     --recommendation-text: #262626;
     --recommendation-muted: #828282;
@@ -496,7 +496,7 @@
     align-items: center;
     gap: 8px;
   
-    color: #bb4d32;
+    color: #FF6854;
   
     font-size: 12px;
     font-weight: 800;

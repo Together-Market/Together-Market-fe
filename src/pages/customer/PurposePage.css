@@ -288,31 +288,22 @@
   }
   
   /* ==========================================
-     지원하지 않는 선택지
-  ========================================== */
+   중분류 선택지
+   - 모든 버튼 동일한 디자인 유지
+   - 실제 지원하지 않는 항목도 회색 처리하지 않음
+========================================== */
+
+.purpose-page__option[aria-disabled="true"] {
+    background: #ffffff;
+    border-color: #e5e5e5;
+    color: #222222;
   
-  .purpose-page__option:disabled {
-    background: #f9f9f9;
-    border-color: #eeeeee;
-  
-    color: #b1b1b1;
-  
-    cursor: not-allowed;
+    cursor: pointer;
   }
   
+  /* 기존 '준비 중' 문구는 표시하지 않음 */
   .purpose-page__unavailable {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-  
-    color: #aaaaaa;
-  
-    font-size: 10px;
-    font-weight: 500;
-  
-    white-space: nowrap;
-  
-    transform: translateY(-50%);
+    display: none;
   }
   
   /* ==========================================

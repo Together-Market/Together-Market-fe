@@ -65,7 +65,6 @@ function PurposePage() {
   // ==========================================
 
   const [categories, setCategories] = useState([]);
-
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [reloadKey, setReloadKey] = useState(0);
@@ -108,7 +107,7 @@ function PurposePage() {
         setCategories(items);
 
         // 재조회 시 이전 선택이 실제 데이터에
-        // 존재하는 경우에만 선택 상태를 유지
+        // 존재하는 경우에만 선택 상태 유지
         setSelectedMainId((previous) => {
           const exists = items.some(
             (item) =>
@@ -171,7 +170,7 @@ function PurposePage() {
     const nextId = String(categoryId);
 
     if (selectedMainId !== nextId) {
-      // 대분류를 변경하면 이전 세부 목적 선택 초기화
+      // 대분류를 변경하면 이전 중분류 선택 초기화
       setSelectedSubId(null);
     }
 
@@ -183,6 +182,8 @@ function PurposePage() {
   // ==========================================
 
   function handleSubSelect(category) {
+    // 시연에서 지원하지 않는 목적은
+    // 클릭해도 아무 동작을 하지 않음
     if (!isPurposeEnabled(category.id)) {
       return;
     }
@@ -206,6 +207,7 @@ function PurposePage() {
       return;
     }
 
+    // 실제 지원하는 목적만 다음 단계로 이동
     if (!isPurposeEnabled(selectedSub.id)) {
       return;
     }
@@ -250,7 +252,7 @@ function PurposePage() {
   }
 
   // ==========================================
-  // 현재 단계에서 다음 진행 가능 여부
+  // 다음 진행 가능 여부
   // ==========================================
 
   const canProceed = isMainStep
@@ -433,8 +435,7 @@ function PurposePage() {
                   {subCategories.map((category) => {
                     const id = String(category.id);
 
-                    const enabled =
-                      isPurposeEnabled(id);
+                    const enabled = isPurposeEnabled(id);
 
                     const selected =
                       String(selectedSubId) === id;
@@ -443,7 +444,6 @@ function PurposePage() {
                       <button
                         key={id}
                         type="button"
-                        disabled={!enabled}
                         className={`purpose-page__option ${
                           selected ? "is-selected" : ""
                         }`}
@@ -451,22 +451,15 @@ function PurposePage() {
                           handleSubSelect(category)
                         }
                         aria-pressed={selected}
+                        aria-disabled={!enabled}
                       >
-                        <span>
-                          {category.name}
-                        </span>
+                        <span>{category.name}</span>
 
                         {selected && (
                           <Check
                             size={17}
                             className="purpose-page__check"
                           />
-                        )}
-
-                        {!enabled && (
-                          <small className="purpose-page__unavailable">
-                            준비 중
-                          </small>
                         )}
                       </button>
                     );
@@ -477,16 +470,6 @@ function PurposePage() {
                   이 구매 목적에는 등록된 세부 목적이
                   없습니다.
                 </div>
-              )}
-
-              {subCategories.some(
-                (category) =>
-                  !isPurposeEnabled(category.id)
-              ) && (
-                <p className="purpose-page__notice">
-                  일부 세부 목적은 현재 시연에서
-                  지원하지 않아요.
-                </p>
               )}
             </section>
           )}

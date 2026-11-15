@@ -9,6 +9,22 @@ import {
   mockUpdateOwnerStoreHours,
 } from "../mocks/ownerMock";
 
+// 선택한 주소를 위도·경도로 변환 (지도 미리보기 전용)
+export async function geocodeStoreAddress(address) {
+  const normalizedAddress = address.trim().replace(/\s+/g, " ");
+
+  if (!normalizedAddress || normalizedAddress.length > 500) {
+    throw new Error("올바른 주소를 선택해 주세요.");
+  }
+
+  const params = new URLSearchParams({
+    address: normalizedAddress,
+  });
+
+  return apiRequest(`/owner/stores/geocode?${params.toString()}`);
+}
+
+
 function encodeId(id) {
   if (id == null || String(id).trim() === "") {
     throw new Error("점포 번호가 없습니다.");

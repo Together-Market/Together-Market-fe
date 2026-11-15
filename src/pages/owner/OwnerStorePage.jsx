@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 
 import {
@@ -21,6 +21,7 @@ import {
   updateOwnerStore,
   getOwnerStoreHours,
   updateOwnerStoreHours,
+  geocodeStoreAddress,
 } from "../../api/ownerApi";
 
 import "./OwnerStorePage.css";
@@ -48,7 +49,6 @@ const DAYS = [
   { value: 7, label: "일요일" },
 ];
 
-// 대한민국 점포 등록을 위한 대략적인 좌표 범위
 const KOREA_COORDINATE_RANGE = {
   latitudeMin: 33,
   latitudeMax: 39,
@@ -60,18 +60,15 @@ const KOREA_COORDINATE_RANGE = {
 // 연락처 검증
 // ==========================================
 
-// 하이픈 제거 후 숫자만 추출
 function getPhoneDigits(value) {
   return String(value ?? "").replace(/\D/g, "");
 }
 
-// 전화번호 입력 시 자동으로 하이픈 추가
 function formatPhoneNumber(value) {
   const digits = getPhoneDigits(value).slice(0, 11);
 
   if (!digits) return "";
 
-  // 서울 지역번호
   if (digits.startsWith("02")) {
     if (digits.length <= 2) return digits;
 
@@ -94,14 +91,10 @@ function formatPhoneNumber(value) {
     );
   }
 
-  // 휴대전화 및 기타 지역번호
   if (digits.length <= 3) return digits;
 
   if (digits.length <= 7) {
-    return (
-      `${digits.slice(0, 3)}-` +
-      digits.slice(3)
-    );
+    return `${digits.slice(0, 3)}-${digits.slice(3)}`;
   }
 
   if (digits.length <= 10) {
@@ -126,31 +119,16 @@ function validatePhone(value) {
     return "연락처를 입력해 주세요.";
   }
 
-  // 서울: 02-XXX-XXXX / 02-XXXX-XXXX
-  const seoulPattern = /^02\d{7,8}$/;
-
-  // 휴대전화: 010-XXXX-XXXX
-  const mobilePattern = /^010\d{8}$/;
-
-  // 일반 지역번호: 031-XXX-XXXX 등
-  const localPattern =
-    /^0(?:3[1-3]|4[1-4]|5[1-5]|6[1-4])\d{7,8}$/;
-
-  // 인터넷 전화
-  const internetPhonePattern = /^070\d{8}$/;
-
   const validFormat =
-    seoulPattern.test(digits) ||
-    mobilePattern.test(digits) ||
-    localPattern.test(digits) ||
-    internetPhonePattern.test(digits);
+    /^02\d{7,8}$/.test(digits) ||
+    /^010\d{8}$/.test(digits) ||
+    /^0(?:3[1-3]|4[1-4]|5[1-5]|6[1-4])\d{7,8}$/.test(digits) ||
+    /^070\d{8}$/.test(digits);
 
   if (!validFormat) {
     return "올바른 전화번호를 입력해 주세요. (예: 031-123-4567)";
   }
 
-  // 예시처럼 전화번호의 나머지 자리가 모두 0인 경우
-  // Mock 시연에서 명백히 잘못된 번호를 차단
   const subscriberDigits = digits.startsWith("02")
     ? digits.slice(2)
     : digits.slice(3);
@@ -177,10 +155,7 @@ function validateCoordinate(value, type) {
     return `${label}를 입력해 주세요.`;
   }
 
-  // 숫자와 소수점으로 구성된 값인지 확인
-  const coordinatePattern = /^-?\d+(\.\d+)?$/;
-
-  if (!coordinatePattern.test(String(value).trim())) {
+  if (!/^-?\d+(\.\d+)?$/.test(String(value).trim())) {
     return `${label}는 숫자로 입력해 주세요.`;
   }
 
@@ -212,7 +187,7 @@ function validateCoordinate(value, type) {
 }
 
 // ==========================================
-// 점포 정보 전체 검증
+// 점포 정보 검증
 // ==========================================
 
 function getFormErrors(form, isCreating) {
@@ -260,7 +235,7 @@ function getFormErrors(form, isCreating) {
 }
 
 // ==========================================
-// 기본 영업시간
+// 영업시간 기본 설정
 // ==========================================
 
 function createDefaultSchedule() {
@@ -274,113 +249,107 @@ function createDefaultSchedule() {
   }));
 }
 
-
 function normalizeSchedule(result) {
-    const defaults = createDefaultSchedule();
-  
-    const items = Array.isArray(result)
-      ? result
-      : Array.isArray(result?.items)
-        ? result.items
-        : [];
-  
-    if (items.length === 0) {
-      return defaults;
-    }
-  
-    // 특정일 예외는 주간 일정 화면에서 제외
-    const weeklyItems = items.filter(
-      (item) =>
-        item.target_date == null &&
-        item.weekday != null
-    );
-  
-    return defaults.map((day) => {
-      const business = weeklyItems.find(
-        (item) =>
-          Number(item.weekday) === day.weekday &&
-          item.hour_type === "BUSINESS"
-      );
-  
-      const pickup = weeklyItems.find(
-        (item) =>
-          Number(item.weekday) === day.weekday &&
-          item.hour_type === "PICKUP"
-      );
-  
-      return {
-        ...day,
-  
-        closed: Boolean(
-          business?.is_closed ??
-          pickup?.is_closed ??
-          day.closed
-        ),
-  
-        businessStart: String(
-          business?.opens_at ?? day.businessStart
-        ).slice(0, 5),
-  
-        businessEnd: String(
-          business?.closes_at ?? day.businessEnd
-        ).slice(0, 5),
-  
-        pickupStart: String(
-          pickup?.opens_at ?? day.pickupStart
-        ).slice(0, 5),
-  
-        pickupEnd: String(
-          pickup?.closes_at ?? day.pickupEnd
-        ).slice(0, 5),
-      };
-    });
-}
-  
+  const defaults = createDefaultSchedule();
 
+  const items = Array.isArray(result)
+    ? result
+    : Array.isArray(result?.items)
+      ? result.items
+      : [];
+
+  if (items.length === 0) {
+    return defaults;
+  }
+
+  const weeklyItems = items.filter(
+    (item) =>
+      item.target_date == null &&
+      item.weekday != null
+  );
+
+  return defaults.map((day) => {
+    const business = weeklyItems.find(
+      (item) =>
+        Number(item.weekday) === day.weekday &&
+        item.hour_type === "BUSINESS"
+    );
+
+    const pickup = weeklyItems.find(
+      (item) =>
+        Number(item.weekday) === day.weekday &&
+        item.hour_type === "PICKUP"
+    );
+
+    return {
+      ...day,
+
+      closed: Boolean(
+        business?.is_closed ??
+        pickup?.is_closed ??
+        day.closed
+      ),
+
+      businessStart: String(
+        business?.opens_at ?? day.businessStart
+      ).slice(0, 5),
+
+      businessEnd: String(
+        business?.closes_at ?? day.businessEnd
+      ).slice(0, 5),
+
+      pickupStart: String(
+        pickup?.opens_at ?? day.pickupStart
+      ).slice(0, 5),
+
+      pickupEnd: String(
+        pickup?.closes_at ?? day.pickupEnd
+      ).slice(0, 5),
+    };
+  });
+}
 
 function buildHoursPayload(schedule, existingItems = []) {
-    // 기존 특정일 예외 일정 추출
-    const dateExceptions = existingItems
-      .filter((item) => item.target_date != null)
-      .map((item) => ({ ...item }));
-  
-    const weeklyItems = [];
-  
-    for (const day of schedule) {
-      for (const type of ["BUSINESS", "PICKUP"]) {
-        const isPickup = type === "PICKUP";
-  
-        weeklyItems.push({
-          weekday: day.weekday,
-          target_date: null,
-          hour_type: type,
-          is_closed: day.closed,
-  
-          opens_at: day.closed
-            ? null
-            : isPickup
-              ? day.pickupStart
-              : day.businessStart,
-  
-          closes_at: day.closed
-            ? null
-            : isPickup
-              ? day.pickupEnd
-              : day.businessEnd,
-  
-          end_day_offset: 0,
-        });
-      }
+  const dateExceptions = existingItems
+    .filter((item) => item.target_date != null)
+    .map((item) => ({ ...item }));
+
+  const weeklyItems = [];
+
+  for (const day of schedule) {
+    for (const type of ["BUSINESS", "PICKUP"]) {
+      const isPickup = type === "PICKUP";
+
+      weeklyItems.push({
+        weekday: day.weekday,
+        target_date: null,
+        hour_type: type,
+        is_closed: day.closed,
+
+        opens_at: day.closed
+          ? null
+          : isPickup
+            ? day.pickupStart
+            : day.businessStart,
+
+        closes_at: day.closed
+          ? null
+          : isPickup
+            ? day.pickupEnd
+            : day.businessEnd,
+
+        end_day_offset: 0,
+      });
     }
-  
-    return {
-      items: [
-        ...weeklyItems,
-        ...dateExceptions,
-      ],
-    };
+  }
+
+  return {
+    items: [
+      ...weeklyItems,
+      ...dateExceptions,
+    ],
+  };
 }
-  
 
 function validateSchedule(schedule) {
   for (const day of schedule) {
@@ -447,7 +416,6 @@ function FormField({
         }
         onBlur={onBlur}
         aria-invalid={Boolean(error)}
-        aria-describedby={undefined}
         required
       />
 
@@ -465,36 +433,111 @@ function FormField({
 }
 
 // ==========================================
+// 지도 미리보기
+// OpenStreetMap 지도에 카카오 변환 좌표 표시
+// ==========================================
+
+function StoreLocationPreview({ location }) {
+  const { latitude, longitude, address } = location;
+
+  const lat = Number(latitude);
+  const lon = Number(longitude);
+  const delta = 0.003;
+
+  const bbox = [
+    lon - delta,
+    lat - delta,
+    lon + delta,
+    lat + delta,
+  ].join(",");
+
+  const mapUrl =
+    "https://www.openstreetmap.org/export/embed.html" +
+    `?bbox=${encodeURIComponent(bbox)}` +
+    "&layer=mapnik" +
+    `&marker=${encodeURIComponent(`${lat},${lon}`)}`;
+
+  return (
+    <div className="owner-store__map-preview">
+      <iframe
+        title="선택한 점포 주소 위치 미리보기"
+        src={mapUrl}
+        width="100%"
+        height="280"
+        style={{
+          border: "1px solid #e5e5e5",
+          borderRadius: 12,
+        }}
+        loading="lazy"
+        referrerPolicy="strict-origin-when-cross-origin"
+      />
+
+      <p className="owner-store__note">
+        {address} (지도 미리보기 전용)
+      </p>
+    </div>
+  );
+}
+
+// ==========================================
 // 사장님 점포 관리 페이지
 // ==========================================
 
 function OwnerStorePage() {
   const navigate = useNavigate();
 
-  const [stores, setStores] = useState([]);
+  // ==========================================
+  // 점포 상태
+  // ==========================================
 
+  const [stores, setStores] = useState([]);
   const [selectedStoreId, setSelectedStoreId] =
     useState(null);
 
   const [view, setView] = useState("home");
-
-  const [form, setForm] = useState({
-    ...EMPTY_FORM,
-  });
-
+  const [form, setForm] = useState({ ...EMPTY_FORM });
   const [touched, setTouched] = useState({});
+
+  // ==========================================
+  // 영업시간 상태
+  // ==========================================
 
   const [schedule, setSchedule] = useState(
     createDefaultSchedule
   );
+
+  // ==========================================
+  // 공통 상태
+  // ==========================================
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
   const [error, setError] = useState("");
   const [formError, setFormError] = useState("");
-
   const [reloadKey, setReloadKey] = useState(0);
+
+  // ==========================================
+  // 카카오 주소 좌표 미리보기 상태
+  // 저장용 위도·경도와 완전히 분리
+  // ==========================================
+
+  const [previewLocation, setPreviewLocation] =
+    useState(null);
+
+  const [previewLoading, setPreviewLoading] =
+    useState(false);
+
+  const [previewError, setPreviewError] =
+    useState("");
+
+  const addressVersionRef = useRef(0);
+
+  useEffect(() => {
+    return () => {
+      addressVersionRef.current += 1;
+    };
+  }, []);
 
   // ==========================================
   // 내 점포 목록 조회
@@ -508,46 +551,31 @@ function OwnerStorePage() {
       setError("");
 
       try {
-        
         const result = await getOwnerStores();
 
         if (!active) return;
 
-        // Mock은 { items: [...] }를 반환하고,
-        // API 계층에서 배열을 반환하는 경우도 지원
         const storeList = Array.isArray(result)
-        ? result
-        : result?.items;
+          ? result
+          : result?.items;
 
         if (!Array.isArray(storeList)) {
-        throw new Error(
+          throw new Error(
             "점포 목록 응답 형식이 올바르지 않습니다."
-        );
+          );
         }
 
         setStores(storeList);
 
         setSelectedStoreId((previous) => {
-        const exists = storeList.some(
-            (store) =>
-            String(store.id) === String(previous)
-        );
-
-        return exists
-            ? previous
-            : storeList[0]?.id ?? null;
-        });
-
-
-        setSelectedStoreId((previous) => {
-          const exists = result.some(
+          const exists = storeList.some(
             (store) =>
               String(store.id) === String(previous)
           );
 
           return exists
             ? previous
-            : result[0]?.id ?? null;
+            : storeList[0]?.id ?? null;
         });
       } catch (err) {
         if (active) {
@@ -576,17 +604,30 @@ function OwnerStorePage() {
   );
 
   const isCreating = view === "create";
+  const fieldErrors = getFormErrors(form, isCreating);
 
-  const fieldErrors = getFormErrors(
-    form,
-    isCreating
-  );
+  // ==========================================
+  // 주소 미리보기 초기화
+  // ==========================================
+
+  function clearAddressPreview() {
+    addressVersionRef.current += 1;
+
+    setPreviewLocation(null);
+    setPreviewLoading(false);
+    setPreviewError("");
+  }
 
   // ==========================================
   // 입력 관리
   // ==========================================
 
   function updateFormField(field, value) {
+    if (field === "address") {
+      // 주소가 변경되면 이전 미리보기 무효화
+      clearAddressPreview();
+    }
+
     setFormError("");
 
     setForm((previous) => ({
@@ -609,10 +650,121 @@ function OwnerStorePage() {
   }
 
   // ==========================================
+  // 카카오 주소 좌표 변환
+  // GET /owner/stores/geocode
+  // ==========================================
+
+  async function handlePreviewAddress() {
+    const normalizedAddress = String(form.address ?? "")
+      .trim()
+      .replace(/\s+/g, " ");
+
+    clearAddressPreview();
+
+    const requestVersion = addressVersionRef.current;
+
+    if (
+      !normalizedAddress ||
+      normalizedAddress.length > 500
+    ) {
+      setPreviewError(
+        "건물번호 또는 지번까지 포함된 주소를 입력해 주세요."
+      );
+      return;
+    }
+
+    setPreviewLoading(true);
+
+    try {
+      const result = await geocodeStoreAddress(
+        normalizedAddress
+      );
+
+      // 이전 주소의 응답이면 무시
+      if (requestVersion !== addressVersionRef.current) {
+        return;
+      }
+
+      const validCoordinate =
+        Number.isFinite(result?.latitude) &&
+        Number.isFinite(result?.longitude) &&
+        result.latitude >= -90 &&
+        result.latitude <= 90 &&
+        result.longitude >= -180 &&
+        result.longitude <= 180;
+
+      if (
+        !validCoordinate ||
+        result.coordinate_source !== "KAKAO" ||
+        result.storage_allowed !== false
+      ) {
+        throw new Error(
+          "좌표 미리보기 응답 형식이 올바르지 않습니다."
+        );
+      }
+
+      // 지도 미리보기 상태에만 저장
+      setPreviewLocation({
+        address: result.address,
+        latitude: result.latitude,
+        longitude: result.longitude,
+      });
+    } catch (err) {
+      if (requestVersion !== addressVersionRef.current) {
+        return;
+      }
+
+      const messages = {
+        ADDRESS_NOT_FOUND:
+          "주소에 해당하는 위치가 없습니다. 다시 확인해 주세요.",
+
+        ADDRESS_AMBIGUOUS:
+          "검색 결과가 여러 개입니다. 건물번호 또는 지번까지 입력해 주세요.",
+
+        ADDRESS_INCOMPLETE:
+          "건물번호 또는 지번까지 포함된 주소가 필요합니다.",
+
+        UNAUTHORIZED:
+          "로그인이 만료되었습니다. 다시 로그인해 주세요.",
+
+        FORBIDDEN:
+          "점주 계정으로 로그인해야 이용할 수 있습니다.",
+
+        GEOCODE_NOT_CONFIGURED:
+          "좌표 조회 서버가 아직 설정되지 않았습니다.",
+
+        GEOCODE_RATE_LIMITED:
+          "조회 한도에 도달했습니다. 연속해서 재시도하지 마세요.",
+
+        GEOCODE_UNAVAILABLE:
+          "현재 위치 조회를 사용할 수 없습니다.",
+
+        GEOCODE_TIMEOUT:
+          "위치 조회 시간이 초과되었습니다. 다시 시도해 주세요.",
+
+        GEOCODE_UPSTREAM_ERROR:
+          "외부 지도 서비스 응답을 처리하지 못했습니다.",
+      };
+
+      setPreviewError(
+        messages[err?.code] ??
+          err?.message ??
+          "주소를 확인하지 못했습니다."
+      );
+    } finally {
+      if (requestVersion === addressVersionRef.current) {
+        setPreviewLoading(false);
+      }
+    }
+  }
+
+  // ==========================================
   // 화면 이동
   // ==========================================
 
   function openCreate() {
+    clearAddressPreview();
+
     setForm({ ...EMPTY_FORM });
     setTouched({});
     setFormError("");
@@ -622,10 +774,11 @@ function OwnerStorePage() {
   function openEdit() {
     if (!selectedStore) return;
 
+    clearAddressPreview();
+
     setForm({
       name: selectedStore.name ?? "",
-      business_type:
-        selectedStore.business_type ?? "",
+      business_type: selectedStore.business_type ?? "",
       address: selectedStore.address ?? "",
       phone: selectedStore.phone ?? "",
       latitude: selectedStore.latitude ?? "",
@@ -665,6 +818,8 @@ function OwnerStorePage() {
     if (saving) return;
 
     if (view !== "home") {
+      clearAddressPreview();
+
       setView("home");
       setFormError("");
       setTouched({});
@@ -684,12 +839,8 @@ function OwnerStorePage() {
 
     if (saving) return;
 
-    const errors = getFormErrors(
-      form,
-      isCreating
-    );
+    const errors = getFormErrors(form, isCreating);
 
-    // 저장 버튼 클릭 시 모든 필드 오류 표시
     const allTouched = Object.fromEntries(
       Object.keys(errors).map((key) => [
         key,
@@ -713,6 +864,7 @@ function OwnerStorePage() {
     setFormError("");
 
     try {
+      // 카카오 미리보기 좌표는 payload에 포함하지 않음
       const payload = {
         name: form.name.trim(),
         business_type: form.business_type.trim(),
@@ -721,6 +873,7 @@ function OwnerStorePage() {
       };
 
       if (isCreating) {
+        // 별도로 입력한 저장용 좌표만 사용
         payload.latitude = Number(form.latitude);
         payload.longitude = Number(form.longitude);
 
@@ -732,8 +885,9 @@ function OwnerStorePage() {
         );
       }
 
-      setView("home");
+      clearAddressPreview();
 
+      setView("home");
       setTouched({});
       setReloadKey((value) => value + 1);
     } catch (err) {
@@ -747,7 +901,7 @@ function OwnerStorePage() {
   }
 
   // ==========================================
-  // 영업시간 수정
+  // 영업시간 입력 변경
   // ==========================================
 
   function updateSchedule(weekday, field, value) {
@@ -762,57 +916,48 @@ function OwnerStorePage() {
     );
   }
 
-  
-async function handleSaveHours() {
+  // ==========================================
+  // 영업시간 저장
+  // ==========================================
+
+  async function handleSaveHours() {
     if (saving || !selectedStore) return;
-  
-    // ==========================================
-    // 1. 수정한 주간 영업시간 검증
-    // ==========================================
-  
+
     const validation = validateSchedule(schedule);
-  
+
     if (validation) {
       setFormError(validation);
       return;
     }
-  
+
     setSaving(true);
     setFormError("");
-  
+
     try {
-      // ========================================
-      // 2. 저장 직전 최신 영업시간 조회
-      // ========================================
-  
+      // 저장 직전 기존 영업시간 재조회
       const result = await getOwnerStoreHours(
         selectedStore.id
       );
-  
-      // 배열 또는 { items: [...] } 응답 지원
+
       const existingItems = Array.isArray(result)
         ? result
         : result?.items;
-  
+
       if (!Array.isArray(existingItems)) {
         throw new Error(
           "기존 영업시간을 확인하지 못해 저장을 중단했습니다."
         );
       }
-  
-      // ========================================
-      // 3. 기존 주간 일정 검사
-      // ========================================
-  
+
       const weeklyItems = existingItems.filter(
         (item) => item.target_date == null
       );
-  
-      // 현재 UI에서 지원하지 않는 규칙 검사
+
+      // 현재 UI에서 지원하지 않는 규칙 확인
       const hasUnsupportedRules = weeklyItems.some(
         (item) => {
           const weekday = Number(item.weekday);
-  
+
           return (
             !Number.isInteger(weekday) ||
             weekday < 1 ||
@@ -824,49 +969,35 @@ async function handleSaveHours() {
           );
         }
       );
-  
-      // 동일 요일·시간 종류 중복 여부 확인
+
+      // 동일 요일·시간 종류 중복 확인
       const weeklyKeys = weeklyItems.map(
         (item) =>
           `${Number(item.weekday)}:${item.hour_type}`
       );
-  
+
       const hasDuplicateRules =
         new Set(weeklyKeys).size !== weeklyKeys.length;
-  
+
       if (hasUnsupportedRules || hasDuplicateRules) {
         throw new Error(
           "현재 화면에서 지원하지 않는 영업시간 설정이 있습니다. 기존 일정을 보호하기 위해 저장을 중단했습니다."
         );
       }
-  
-      // ========================================
-      // 4. 주간 일정 + 특정일 예외 결합
-      // ========================================
-  
-      // 앞에서 수정한 buildHoursPayload() 사용
+
+      // 기존 특정일 예외를 보존하면서 저장
       const payload = buildHoursPayload(
         schedule,
         existingItems
       );
-  
-      // ========================================
-      // 5. OWN-05 PUT 요청
-      // ========================================
-  
+
       await updateOwnerStoreHours(
         selectedStore.id,
         payload
       );
-  
-      // ========================================
-      // 6. 저장 성공 후 화면 이동
-      // ========================================
-  
+
       setView("home");
-  
       setReloadKey((value) => value + 1);
-  
     } catch (err) {
       setFormError(
         err.message ??
@@ -876,7 +1007,6 @@ async function handleSaveHours() {
       setSaving(false);
     }
   }
-  
 
   // ==========================================
   // 로그아웃
@@ -904,9 +1034,7 @@ async function handleSaveHours() {
   // ==========================================
 
   const headerTitle = {
-    home: selectedStore
-      ? "점포 관리"
-      : "점포 등록",
+    home: selectedStore ? "점포 관리" : "점포 등록",
     create: "점포 등록",
     edit: "점포 정보 수정",
     hours: "영업·수령시간 설정",
@@ -981,9 +1109,9 @@ async function handleSaveHours() {
         </section>
       )}
 
-      {/* ==================================
+      {/* ======================================
           점포 관리 홈
-      ================================== */}
+      ====================================== */}
 
       {!loading &&
         !error &&
@@ -992,9 +1120,7 @@ async function handleSaveHours() {
             <div className="owner-store__content">
               {!selectedStore ? (
                 <section className="owner-store__intro">
-                  <h2>
-                    아직 등록한 점포가 없어요.
-                  </h2>
+                  <h2>아직 등록한 점포가 없어요.</h2>
 
                   <p>
                     기본정보와 영업·수령시간을
@@ -1091,9 +1217,9 @@ async function handleSaveHours() {
           </div>
         )}
 
-      {/* ==================================
+      {/* ======================================
           점포 등록 / 점포 정보 수정
-      ================================== */}
+      ====================================== */}
 
       {!loading &&
         !error &&
@@ -1163,6 +1289,48 @@ async function handleSaveHours() {
                 onBlur={() => markTouched("address")}
               />
 
+              {/* 주소 좌표 변환 및 지도 미리보기 */}
+
+              <div className="owner-store__location-preview">
+                <button
+                  type="button"
+                  className="owner-store__secondary"
+                  onClick={handlePreviewAddress}
+                  disabled={
+                    saving ||
+                    previewLoading ||
+                    !form.address.trim()
+                  }
+                >
+                  {previewLoading
+                    ? "위치 확인 중..."
+                    : "입력한 주소 지도에서 확인"}
+                </button>
+
+                <p className="owner-store__note">
+                  건물번호 또는 지번까지 포함된 주소를
+                  입력한 뒤 위치를 확인해 주세요.
+                  카카오 조회 결과는 미리보기로만
+                  사용하며 저장하지 않습니다.
+                </p>
+
+                {previewError && (
+                  <p
+                    className="owner-store__field-error"
+                    role="alert"
+                  >
+                    <AlertCircle size={14} />
+                    {previewError}
+                  </p>
+                )}
+
+                {previewLocation && (
+                  <StoreLocationPreview
+                    location={previewLocation}
+                  />
+                )}
+              </div>
+
               {/* 연락처 */}
 
               <FormField
@@ -1182,7 +1350,7 @@ async function handleSaveHours() {
                 onBlur={() => markTouched("phone")}
               />
 
-              {/* 위도·경도는 등록 시 입력 */}
+              {/* 점포 등록용 좌표 입력 */}
 
               {view === "create" && (
                 <>
@@ -1190,6 +1358,9 @@ async function handleSaveHours() {
                     점포 위치를 정확하게 표시하기 위해
                     위도와 경도를 입력해 주세요.
                     대한민국 점포의 좌표만 등록할 수 있어요.
+                    저장용 좌표는 사용 권한이 있는
+                    별도 출처에서 확인해 입력해 주세요.
+                    카카오 미리보기 좌표는 저장할 수 없습니다.
                   </p>
 
                   <FormField
@@ -1201,7 +1372,6 @@ async function handleSaveHours() {
                     maxLength={20}
                     error={getVisibleError("latitude")}
                     onChange={(value) => {
-                      // 숫자와 소수점, 음수 기호만 입력
                       if (/^-?[\d.]*$/.test(value)) {
                         updateFormField(
                           "latitude",
@@ -1274,9 +1444,9 @@ async function handleSaveHours() {
           </form>
         )}
 
-      {/* ==================================
+      {/* ======================================
           영업·수령시간 설정
-      ================================== */}
+      ====================================== */}
 
       {!loading &&
         !error &&
@@ -1284,9 +1454,7 @@ async function handleSaveHours() {
           <div className="owner-store__layout">
             <div className="owner-store__content">
               <section className="owner-store__intro">
-                <h2>
-                  운영시간을 알려주세요.
-                </h2>
+                <h2>운영시간을 알려주세요.</h2>
 
                 <p>
                   영업 및 상품 수령 가능시간을
@@ -1422,9 +1590,9 @@ async function handleSaveHours() {
           </div>
         )}
 
-      {/* ==================================
+      {/* ======================================
           사장님 하단 메뉴
-      ================================== */}
+      ====================================== */}
 
       {!loading &&
         !error &&
@@ -1434,19 +1602,19 @@ async function handleSaveHours() {
             aria-label="사장님 메뉴"
           >
             <button
-                type="button"
-                onClick={() => navigate("/owner/orders")}
+              type="button"
+              onClick={() => navigate("/owner/orders")}
             >
-                <ClipboardList size={20} />
-                <span>주문</span>
+              <ClipboardList size={20} />
+              <span>주문</span>
             </button>
 
             <button
-                type="button"
-                onClick={() => navigate("/owner/products")}
+              type="button"
+              onClick={() => navigate("/owner/products")}
             >
-                <Package size={20} />
-                <span>상품</span>
+              <Package size={20} />
+              <span>상품</span>
             </button>
 
             <button
